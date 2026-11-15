@@ -1,0 +1,3 @@
+episodes/*/work/
+__pycache__/
+*.part.mp4
