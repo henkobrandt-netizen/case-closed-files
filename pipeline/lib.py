@@ -273,3 +273,111 @@ def big_word(c, t, x, y, size, colr):
     c.drawString(t, x - w / 2 + 6, y + 8, f, fill("#000000", .9, 8))
     c.drawString(t, x - w / 2, y, f, stroke("#000000", size * .09))
     c.drawString(t, x - w / 2, y, f, fill(colr))
+
+
+# ======================= added for 002, reusable =======================
+def painting(c, x, y, w, h, a=1.0, seed=0, reveal=1.0, crack=0.0, ink=0.0, glow=0.0, frame=True, label=None, lab_a=1.0):
+    """An invented old-master-style painting (abstract figures, blue + yellow light).
+    Never a copy of a real artwork. (x, y) = centre."""
+    if a <= 0: return
+    rnd = random.Random(seed); fw = w * .07 if frame else 0
+    if glow: c.drawRect(skia.Rect.MakeXYWH(x - w / 2 - 30, y - h / 2 - 30, w + 60, h + 60), fill("#ffcf7a", .18 * glow * a, 60))
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + 10, y - h / 2 + 16, w, h), fill("#000000", .6 * a, 22))
+    if frame:
+        sh = skia.GradientShader.MakeLinear(points=[(x - w / 2, y - h / 2), (x + w / 2, y + h / 2)], colors=[col("#e7c46a", a), col("#8a6326", a), col("#d9b25a", a)])
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), skia.Paint(Shader=sh, AntiAlias=True))
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + fw * .45, y - h / 2 + fw * .45, w - fw * .9, h - fw * .9), stroke("#5a3e14", 3, a, cap=False))
+    ix, iy, iw, ih = x - w / 2 + fw, y - h / 2 + fw, w - 2 * fw, h - 2 * fw
+    c.save(); c.clipRect(skia.Rect.MakeXYWH(ix, iy, iw, ih))
+    c.drawRect(skia.Rect.MakeXYWH(ix, iy, iw, ih), fill("#2a2016", a))
+    if reveal > 0:
+        c.save(); c.clipRect(skia.Rect.MakeXYWH(ix, iy, iw, ih * clamp(reveal)))
+        lx = ix + iw * rnd.uniform(.25, .4)
+        sh = skia.GradientShader.MakeRadial(center=(lx, iy + ih * .3), radius=iw * .9, colors=[col("#c9a46a", a), col("#5a4126", a), col("#1d150d", a)], positions=[0, .45, 1])
+        c.drawRect(skia.Rect.MakeXYWH(ix, iy, iw, ih), skia.Paint(Shader=sh))
+        c.drawRect(skia.Rect.MakeXYWH(ix, iy + ih * .66, iw, ih * .34), fill("#3a2a1a", .9 * a))       # table
+        c.drawRect(skia.Rect.MakeXYWH(ix, iy + ih * .64, iw, ih * .04), fill("#efe4c9", .85 * a))      # cloth edge
+        n = rnd.randint(2, 4); cols = ["#2e4f8f", "#c8a23c", "#7a2b22", "#3b5a3a"]
+        for k in range(n):
+            fx = ix + iw * (k + .5) / n + rnd.uniform(-.05, .05) * iw; fy = iy + ih * .68
+            P = skia.Path(); P.moveTo(fx - iw * .13, fy + ih * .1); P.cubicTo(fx - iw * .12, fy - ih * .25, fx + iw * .12, fy - ih * .25, fx + iw * .13, fy + ih * .1); P.close()
+            c.drawPath(P, fill(cols[(k + seed) % 4], .9 * a))
+            c.drawCircle(fx, fy - ih * .3, iw * .045, fill("#d7b083", a)); c.drawCircle(fx - iw * .01, fy - ih * .32, iw * .02, fill("#f3dcb0", .5 * a, 4))
+        c.drawOval(skia.Rect.MakeXYWH(ix + iw * .44, iy + ih * .58, iw * .12, ih * .07), fill("#efe4c9", a))  # jug/plate
+        c.restore()
+        if 0 < reveal < 1:  # wet edge
+            c.drawRect(skia.Rect.MakeXYWH(ix, iy + ih * reveal - 4, iw, 8), fill("#e8d2a0", .5 * a, 4))
+    if crack > 0:
+        r2 = random.Random(seed + 99); st = stroke("#0d0906" if ink > .5 else "#d8c6a0", 1.6, a * (.35 + .5 * ink) * clamp(crack * 1.5))
+        for k in range(int(70 * crack)):
+            px, py = ix + r2.uniform(0, iw), iy + r2.uniform(0, ih)
+            P = skia.Path(); P.moveTo(px, py)
+            for j in range(4): px += r2.uniform(-28, 28); py += r2.uniform(-28, 28); P.lineTo(px, py)
+            c.drawPath(P, st)
+    if ink > 0: c.drawRect(skia.Rect.MakeXYWH(ix, iy, iw, ih), fill("#120c06", .25 * ink * a))
+    c.restore()
+    if label: label_plate(c, label, x, y + h / 2 + 46, a * lab_a)
+
+def label_plate(c, s, x, y, a=1.0, size=22):
+    w = tw(s, "sansb", size) + len(s) * 2 + 44
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - size * 1.1, w, size * 1.7), fill("#e9dfc6", a))
+    text(c, s, x, y + size * .1, size, "sansb", "#2a2216", a, spacing=2)
+
+def easel(c, x, y, s=1.0, a=1.0, color="#5a3a22"):
+    st = stroke(color, 14 * s, a)
+    c.drawLine(x - 170 * s, y, x - 40 * s, y - 760 * s, st); c.drawLine(x + 170 * s, y, x + 40 * s, y - 760 * s, st)
+    c.drawLine(x, y - 40 * s, x, y - 700 * s, st); c.drawLine(x - 230 * s, y - 210 * s, x + 230 * s, y - 210 * s, stroke(color, 18 * s, a))
+
+def mine(ctx, t, a=1.0, beam=None, crates=True):
+    """Salt-mine tunnel receding into the dark. beam=(x,y) torch target."""
+    c = ctx.c; W, H, cx, cy = ctx.W, ctx.H, ctx.cx, ctx.cy
+    for k in range(7, -1, -1):
+        s = .25 + k * .14; w = 900 * s; h = 760 * s; y0 = cy + 300 * s - 120
+        P = skia.Path(); P.moveTo(cx - w / 2, y0 + h * .2); P.lineTo(cx - w / 2, y0 - h * .35)
+        P.cubicTo(cx - w / 2, y0 - h * .85, cx + w / 2, y0 - h * .85, cx + w / 2, y0 - h * .35); P.lineTo(cx + w / 2, y0 + h * .2)
+        c.drawPath(P, stroke("#6b6458", 26 * s, a * (.25 + .09 * k), cap=False))
+    c.drawRect(skia.Rect.MakeLTRB(0, cy + 330, W, H), fill("#0b0b0e", a))
+    if crates:
+        rnd = random.Random(5)
+        for k in range(9):
+            x = 120 + k * 210 + rnd.uniform(-30, 30); s = rnd.uniform(.8, 1.15); y = cy + 340
+            for j in range(rnd.randint(1, 3)):
+                bw, bh = 180 * s, 120 * s; yy = y - (j + 1) * bh
+                c.drawRect(skia.Rect.MakeXYWH(x - bw / 2, yy, bw, bh), fill("#2a2219", a)); c.drawRect(skia.Rect.MakeXYWH(x - bw / 2, yy, bw, bh), stroke("#4a3b28", 4, a, cap=False))
+                c.drawLine(x - bw / 2, yy, x + bw / 2, yy + bh, stroke("#4a3b28", 3, a * .7, cap=False))
+    if beam:
+        bx, by = beam; P = skia.Path(); P.moveTo(W * .08, H * .95); P.lineTo(bx - 260, by - 220); P.lineTo(bx + 260, by + 220); P.close()
+        c.drawPath(P, fill("#ffe2a0", .16 * a, 24)); c.drawCircle(bx, by, 330, fill("#ffe2a0", .12 * a, 90))
+
+def oven(c, x, y, s=1.0, a=1.0, heat=0.0, temp=None):
+    w, h = 520 * s, 420 * s
+    c.drawRoundRect(skia.Rect.MakeXYWH(x - w / 2 + 10, y - h / 2 + 14, w, h), 18, 18, fill("#000000", .6 * a, 20))
+    c.drawRoundRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), 18, 18, fill("#3a3d48", a))
+    c.drawRoundRect(skia.Rect.MakeXYWH(x - w / 2 + 40 * s, y - h / 2 + 90 * s, w - 80 * s, h - 140 * s), 10, 10, fill("#0d0e12", a))
+    if heat > 0:
+        c.drawRoundRect(skia.Rect.MakeXYWH(x - w / 2 + 40 * s, y - h / 2 + 90 * s, w - 80 * s, h - 140 * s), 10, 10, fill("#ff7a2a", .55 * heat * a, 18))
+        for k in range(5): c.drawLine(x - w / 2 + 70 * s + k * 90 * s, y + h / 2 - 70 * s, x - w / 2 + 110 * s + k * 90 * s, y + h / 2 - 70 * s, stroke("#ffb35a", 8 * s, heat * a))
+    for k in range(3): c.drawCircle(x - w / 2 + 80 * s + k * 70 * s, y - h / 2 + 45 * s, 18 * s, fill("#20222a", a))
+    if temp is not None:
+        text(c, f"{int(temp)}°C", x + w / 2 - 50 * s, y - h / 2 + 60 * s, 46 * s, "sansb", "#ffb35a", a, align="r")
+
+def vial(c, x, y, s=1.0, a=1.0, fillc="#7fd1c7", level=.6):
+    w, h = 70 * s, 240 * s
+    P = skia.Path(); P.addRoundRect(skia.Rect.MakeXYWH(x - w / 2, y - h, w, h), w / 2, w / 2)
+    c.save(); c.clipPath(P, True); c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h * level, w, h * level), fill(fillc, .8 * a)); c.restore()
+    c.drawPath(P, stroke("#d9e6ee", 5 * s, a)); c.drawRect(skia.Rect.MakeXYWH(x - w / 2 - 8 * s, y - h - 10 * s, w + 16 * s, 16 * s), fill("#d9e6ee", a))
+
+def bar_chart(c, x, y, rows, p, w=900, row_h=86, a=1.0, hi=1):
+    """rows = [(label, value 0..1)]; hi = index highlighted in gold."""
+    for i, (lab, v) in enumerate(rows):
+        yy = y + i * row_h; q = eo(seg(p, i * .12, i * .12 + .6))
+        text(c, lab, x - 24, yy + row_h * .42, 34, "sansb", GOLD if i == hi else WHITE, a * seg(p, i * .12, i * .12 + .3), align="r")
+        bar(c, x, yy + row_h * .1, w, row_h * .5, v * q, GOLD if i == hi else "#8a93ad", a)
+
+def villa(c, x, y, s=1.0, a=1.0):
+    c.drawRect(skia.Rect.MakeXYWH(x - 330 * s, y - 260 * s, 660 * s, 260 * s), fill("#e9dcc0", a))
+    P = skia.Path(); P.moveTo(x - 370 * s, y - 260 * s); P.lineTo(x, y - 380 * s); P.lineTo(x + 370 * s, y - 260 * s); P.close(); c.drawPath(P, fill("#b9583a", a))
+    for r in range(2):
+        for k in range(6):
+            c.drawRect(skia.Rect.MakeXYWH(x - 290 * s + k * 100 * s, y - 230 * s + r * 110 * s, 50 * s, 70 * s), fill("#2e4f8f" if (k + r) % 3 else "#ffcf7a", a))
+    for k in (-1, 1): c.drawCircle(x + k * 420 * s, y - 120 * s, 70 * s, fill("#2f5a3a", a)); c.drawRect(skia.Rect.MakeXYWH(x + k * 420 * s - 8 * s, y - 70 * s, 16 * s, 70 * s), fill("#3a2a1a", a))

@@ -109,9 +109,18 @@ def render(still=None):
     with Pool(os.cpu_count()) as p:
         for sid in p.imap_unordered(_job, jobs): print("rendered", sid, flush=True)
     if still:
-        fs = sorted(glob.glob(f"{WORK}/stills/long_*.png"))
-        open(f"{WORK}/l.txt", "w").write("".join(f"file '{f}'\nduration 1\n" for f in fs))
-        sh(f"ffmpeg -y -loglevel error -f concat -safe 0 -i {WORK}/l.txt -vf scale=480:-1,tile=4x6 -q:v 3 {WORK}/sheet_%02d.jpg")
+        for f in glob.glob(f"{WORK}/sheet_*.jpg"): os.remove(f)
+        for name in ("long", "short"):
+            fs = sorted(glob.glob(f"{WORK}/stills/{name}_*.png"))
+            per = 12 if name == "long" else 10
+            for i in range(0, len(fs), per):
+                ins = " ".join(f"-i {f}" for f in fs[i:i + per]); n = len(fs[i:i + per])
+                cols = 4 if name == "long" else 5
+                lay = "|".join(f"{(j % cols)}*w0_{(j // cols)}*h0".replace("0*w0", "0").replace("_0*h0", "_0") for j in range(n))
+                lay = "|".join(("0" if j % cols == 0 else "+".join(["w0"] * (j % cols))) + "_" + ("0" if j // cols == 0 else "+".join(["h0"] * (j // cols))) for j in range(n))
+                sc = 480 if name == "long" else 216
+                fc = ";".join(f"[{j}]scale={sc}:-1[v{j}]" for j in range(n)) + ";" + "".join(f"[v{j}]" for j in range(n)) + (f"xstack=inputs={n}:layout={lay}:fill=black" if n > 1 else "null")
+                sh(f'ffmpeg -y -loglevel error {ins} -filter_complex "{fc}" -q:v 3 {WORK}/sheet_{name}_{i // per + 1:02d}.jpg')
         print("contact sheets in", WORK)
 
 # ---------------------------------------------------------------- sound

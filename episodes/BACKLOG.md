@@ -1,7 +1,7 @@
 # Topic backlog (top = next). Mark [x] when an episode is made.
 
 - [x] Victor Lustig sold the Eiffel Tower (001)
-- [ ] Han van Meegeren: the forger who fooled the Nazis (and had to prove his paintings were fake)
+- [x] Han van Meegeren: the forger who fooled the Nazis (002)
 - [ ] Gregor MacGregor: the man who sold a country that didn't exist (Poyais)
 - [ ] The Antwerp Diamond Heist, 2003: the "unbreakable" vault
 - [ ] Vincenzo Peruggia: the man who stole the Mona Lisa (1911)
