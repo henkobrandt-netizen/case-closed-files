@@ -82,8 +82,9 @@ Pull 6 frames from the final long.mp4 and look at them.
    posts = the 3 parts with the same times as YouTube, TikTok captions "hook + Part N/3 + Follow for Part
    N+1 + Full case on YouTube: Case Closed Files + 6 hashtags", todos = anything the user must do),
    run `python3 pipeline/handoff.py handoff/<date>.json`, publish the .html as an artifact (the TikTok
-   posting kit) and send the .ics with SendUserFile (the user taps it on iPhone to add the reminders).
-4. Send the user ONE message with the drafts, the kit link and the .ics. Publish only after they say yes.
+   posting kit). It also rebuilds `calendar/ccf-tiktok.ics`, the feed the user's iPhone subscribes to:
+   commit and push it, and the reminders appear on their phone by themselves. Don't send .ics files.
+4. Send the user ONE message with the drafts and the kit link. Publish only after they say yes.
 5. Log the episode in `episodes/LOG.md` and mark the topic taken in BACKLOG.md. Commit + push.
 
 ## House rules

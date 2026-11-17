@@ -1,0 +1,230 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Case Closed Files//Handoff//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:CCF TikTok posts
+X-WR-TIMEZONE:Africa/Johannesburg
+REFRESH-INTERVAL;VALUE=DURATION:PT6H
+X-PUBLISHED-TTL:PT6H
+BEGIN:VEVENT
+UID:4841450e-9290-5b84-86aa-b61b25d22962@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261118T100000Z
+DTEND:20261118T101500Z
+SUMMARY:Post on TikTok: Case 001 Part 1/3
+DESCRIPTION:He sold the Eiffel Tower. He didn't own it.\nVideo: https://ra
+ w.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/
+ 001-eiffel-tower/short_a.mp4\nCaption:\nHe sold the Eiffel Tower. He didn
+ 't own it. 🗼 Part 1/3\n\nParis\, 1925. A fake count\, a forged governm
+ ent letter\, and a scrap dealer about to hand over a fortune.\n\nFollow f
+ or Part 2 👀 Full case on YouTube: Case Closed Files\n#truecrime #conma
+ n #history #eiffeltower #storytime #fyp\nSettings: Everyone\, comments on
+ \, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/001-eiffel-tower/short_a.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 001 Part 1/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 001 Part 1/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6b2c0eee-0646-5d96-b324-7a60ca63f90c@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261118T170000Z
+DTEND:20261118T171500Z
+SUMMARY:Post on TikTok: Case 001 Part 2/3
+DESCRIPTION:How to sell something you don't own\nVideo: https://raw.github
+ usercontent.com/henkobrandt-netizen/case-closed-files/main/media/001-eiff
+ el-tower/short_b.mp4\nCaption:\nHow do you sell something you don't own? 
+ 📰 Part 2/3\n\nA money box that 'printed' cash\, a newspaper story\, an
+ d a forged government letterhead.\n\nFollow for Part 3 👀 Full case on 
+ YouTube: Case Closed Files\n#truecrime #conman #history #eiffeltower #sto
+ rytime #fyp\nSettings: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/001-eiffel-tower/short_b.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 001 Part 2/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 001 Part 2/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8bbade2f-c510-5526-b9eb-1803703809b4@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261119T100000Z
+DTEND:20261119T101500Z
+SUMMARY:Post on TikTok: Case 001 Part 3/3
+DESCRIPTION:The buyer got suspicious. The con man didn't panic.\nVideo: ht
+ tps://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/mai
+ n/media/001-eiffel-tower/short_c.mp4\nCaption:\nHis buyer got suspicious.
+  The con man didn't panic. 🤝 Part 3/3\n\nWhat Victor Lustig did next i
+ s the reason con men still study him.\n\nFull case on YouTube: Case Close
+ d Files\n#truecrime #conman #history #eiffeltower #storytime #fyp\nSettin
+ gs: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/001-eiffel-tower/short_c.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 001 Part 3/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 001 Part 3/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bb90ca51-bff0-5fb4-b9ac-3c048cc71b44@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261119T170000Z
+DTEND:20261119T171500Z
+SUMMARY:Post on TikTok: Case 002 Part 1/3
+DESCRIPTION:He sold a fake Vermeer to the Nazis\nVideo: https://raw.github
+ usercontent.com/henkobrandt-netizen/case-closed-files/main/media/002-van-
+ meegeren/short_a.mp4\nCaption:\nHe sold a fake Vermeer to the Nazis. 🖼
+ ️ Part 1/3\n\n1945. The charge: selling a national treasure to the enem
+ y. His only defence: 'I painted it myself.'\n\nFollow for Part 2 👀 Ful
+ l case on YouTube: Case Closed Files\n#truecrime #artforgery #history #ve
+ rmeer #storytime #fyp\nSettings: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/002-van-meegeren/short_a.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 002 Part 1/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 002 Part 1/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:62445f8a-e0e5-54ff-8196-ce0f77cc012b@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261120T100000Z
+DTEND:20261120T101500Z
+SUMMARY:Post on TikTok: Case 002 Part 2/3
+DESCRIPTION:How he faked a 300-year-old masterpiece\nVideo: https://raw.gi
+ thubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/002-
+ van-meegeren/short_b.mp4\nCaption:\nHow do you fake a 300-year-old master
+ piece? 🎨🔥 Part 2/3\n\nOld canvas\, hand-ground paint\, an early pla
+ stic\, and an oven.\n\nFollow for Part 3 👀 Full case on YouTube: Case 
+ Closed Files\n#truecrime #artforgery #history #vermeer #storytime #fyp\nS
+ ettings: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/002-van-meegeren/short_b.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 002 Part 2/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 002 Part 2/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6a0fb59d-fd24-5f64-a6fb-18d4f4e343c1@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261120T170000Z
+DTEND:20261120T171500Z
+SUMMARY:Post on TikTok: Case 002 Part 3/3
+DESCRIPTION:Nobody believed he forged it. So he proved it.\nVideo: https:/
+ /raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/med
+ ia/002-van-meegeren/short_c.mp4\nCaption:\nNobody believed he forged it. 
+ So he proved it. 🧪 Part 3/3\n\nUnder guard\, in front of witnesses\, h
+ e painted one last fake. Then scientists found plastic in the paint.\n\nF
+ ull case on YouTube: Case Closed Files\n#truecrime #artforgery #history #
+ vermeer #storytime #fyp\nSettings: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/002-van-meegeren/short_c.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 002 Part 3/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 002 Part 3/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:9af4f3f3-7378-5d9e-9d34-1718cb7fd01e@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261117T160000Z
+DTEND:20261117T161500Z
+SUMMARY:Set up the Case Closed Files TikTok profile
+DESCRIPTION:Edit profile: name 'Case Closed Files'. Photo: https://raw.git
+ hubusercontent.com/henkobrandt-netizen/case-closed-files/main/branding/av
+ atar.png . Bio: 'True cons & heists\, animated 🕵️ New case every wee
+ k. Full cases on YouTube ↓'. Add your YouTube channel @CaseClosedFilesT
+ V under Social.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Set up the Case Closed Files TikTok profile
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Set up the Case Closed Files TikTok profile
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e9cbd27e-9814-502a-b5a8-5f85052960cc@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261117T161500Z
+DTEND:20261117T163000Z
+SUMMARY:Finish the caseclosed.files Instagram profile
+DESCRIPTION:In the Instagram app: profile photo (same avatar.png)\, name '
+ Case Closed Files · True Crime'\, link https://www.youtube.com/@CaseClos
+ edFilesTV . Skip if already done.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Finish the caseclosed.files Instagram profile
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Finish the caseclosed.files Instagram profile
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:81b3d3e1-0aac-5d8a-a72e-77301941571d@caseclosedfiles
+DTSTAMP:20261117T145355Z
+DTSTART:20261118T103000Z
+DTEND:20261118T104000Z
+SUMMARY:Check Claude: approve the new Case Closed Files episode
+DESCRIPTION:The robot makes a new episode on Mon\, Wed and Fri mornings. O
+ pen the chat\, check the drafts\, say yes. It also sends a new TikTok kit
+  and reminders file to add.
+RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Check Claude: approve the new Case Closed Files episode
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Check Claude: approve the new Case Closed Files episode
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

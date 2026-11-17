@@ -4,6 +4,9 @@ usage: python3 pipeline/handoff.py handoff/<name>.json
 The JSON holds {"title", "posts": [{when, case, part, title, video, caption}],
 "todos": [{when, title, notes, minutes?, rrule?}]}. `when` is local SAST "YYYY-MM-DD HH:MM".
 Writes handoff/<name>.html and handoff/<name>.ics. Every post also becomes a reminder.
+Also rebuilds calendar/ccf-tiktok.ics from every handoff/*.json: the user's iPhone subscribes to
+https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/calendar/ccf-tiktok.ics
+so commit and push after running this, and new reminders show up on their phone by themselves.
 """
 import sys, json, html, datetime as dt, os, uuid
 
@@ -24,7 +27,8 @@ def fold(line):
 
 def ics(items, cal):
     L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Case Closed Files//Handoff//EN", "CALSCALE:GREGORIAN",
-         "METHOD:PUBLISH", f"X-WR-CALNAME:{ics_text(cal)}"]
+         "METHOD:PUBLISH", f"X-WR-CALNAME:{ics_text(cal)}", "X-WR-TIMEZONE:Africa/Johannesburg",
+         "REFRESH-INTERVAL;VALUE=DURATION:PT6H", "X-PUBLISHED-TTL:PT6H"]
     stamp = z(dt.datetime.now(SAST))
     for it in items:
         start = parse(it["when"]); end = start + dt.timedelta(minutes=it.get("minutes", 15))
@@ -108,8 +112,19 @@ if __name__ == "__main__":
     for p in spec["posts"]: p.setdefault("id", f"{p['case']}-{p['part']}-{p['when']}")
     data = json.dumps({"posts": spec["posts"], "todos": spec["todos"]}, ensure_ascii=False).replace("</", "<\\/")
     open(base + ".html", "w").write(PAGE.replace("__TITLE__", html.escape(spec["title"])).replace("__DATA__", data))
-    rem = [{"when": p["when"], "title": f"Post on TikTok: {p['case']} Part {p['part']}/3", "url": p["video"],
-            "notes": f"{p['title']}\nVideo: {p['video']}\nCaption:\n{p['caption']}\nSettings: Everyone, comments on, AI label on."}
-           for p in spec["posts"]] + spec["todos"]
+    def reminders(spec):
+        return [{"when": p["when"], "title": f"Post on TikTok: {p['case']} Part {p['part']}/3", "url": p["video"],
+                 "notes": f"{p['title']}\nVideo: {p['video']}\nCaption:\n{p['caption']}\nSettings: Everyone, comments on, AI label on."}
+                for p in spec["posts"]] + spec["todos"]
+    rem = reminders(spec)
     open(base + ".ics", "w", newline="").write(ics(rem, spec.get("calendar", "Case Closed Files")))
-    print("wrote", base + ".html", base + ".ics", len(rem), "reminders")
+    import glob
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); allr, seen = [], set()
+    for f in sorted(glob.glob(os.path.join(root, "handoff", "*.json"))):
+        for r in reminders(json.load(open(f))):
+            k = (r["title"], r["when"])
+            if k not in seen: seen.add(k); allr.append(r)
+    os.makedirs(os.path.join(root, "calendar"), exist_ok=True)
+    feed = os.path.join(root, "calendar", "ccf-tiktok.ics")
+    open(feed, "w", newline="").write(ics(allr, "CCF TikTok posts"))
+    print("wrote", base + ".html", base + ".ics", len(rem), "reminders; feed", feed, len(allr), "events")
