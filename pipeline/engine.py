@@ -302,7 +302,7 @@ def caption(ctx, lines, p_in, a=1.0):
 
 
 # ---------- render ----------
-def render_scene(fn, dur, cues, out, W=1920, H=1080, warm=0.0, captions=None, fade_in=.35, fade_out=.35, still=None, crf=17):
+def render_scene(fn, dur, cues, out, W=1920, H=1080, warm=0.0, captions=None, fade_in=.35, fade_out=.35, still=None, crf=17, overlay=None):
     surf = skia.Surface(W, H); c = surf.getCanvas()
     n = int(round(dur * FPS)); vig = vignette(W, H)
     frames = range(n) if still is None else [int(s * FPS) for s in still]
@@ -320,6 +320,7 @@ def render_scene(fn, dur, cues, out, W=1920, H=1080, warm=0.0, captions=None, fa
         fn(ctx); c.restore()
         c.drawImage(vig, 0, 0)
         c.save(); c.scale(2, 2); c.drawImage(grain(W, H, fi // 2), 0, 0, skia.SamplingOptions(), skia.Paint(Alphaf=.5)); c.restore()
+        if overlay: overlay(ctx, t)
         if captions:
             for (a0, a1, lines) in captions:
                 if a0 <= t < a1: caption(ctx, lines, eo(seg(t, a0, a0 + .18)))

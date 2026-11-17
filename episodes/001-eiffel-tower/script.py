@@ -77,5 +77,24 @@ SHORT = [
  ("s_twice", [("So Lustig came back. And tried to sell it again.", "So Lustig came back.|And tried to sell it again.")]),
 ]
 
+# Three 60-90 s shorts, each its own mini story. None gives away the ending.
+SHORTS = {
+ "a": [
+  ("hook_a", [("In nineteen twenty-five, a man sold the Eiffel Tower. He didn't own it.", "In 1925, a man sold|the Eiffel Tower.|He didn't own it.")]),
+  ("cold", None), ("who", None),
+  ("cta_a", [("Part two: how he set up the perfect lie. Follow, so you don't miss it.", "Part 2: how he set up|the perfect lie.|Follow so you don't miss it.")]),
+ ],
+ "b": [
+  ("hook_b", [("How do you sell something you don't own? Victor Lustig had a plan.", "How do you sell|something you don't own?|Victor Lustig had a plan.")]),
+  ("box", None), ("idea", None), ("letter", None),
+  ("cta_b", [("Part three: the meeting where he closed the deal. Follow for part three.", "Part 3: the meeting|where he closed the deal.|Follow for part 3.")]),
+ ],
+ "c": [
+  ("hook_c", [("His buyer was getting suspicious. What the con man did next is still studied today.", "His buyer was|getting suspicious.|What the con man did next|is still studied today.")]),
+  ("pitch", None), ("mark", None), ("bribe", None),
+  ("cta_c", [("And then, he tried to sell it again. The full case is on the channel.", "And then, he tried|to sell it again.|Full case on the channel.")]),
+ ],
+}
+
 # Kokoro phoneme fixes for names it says wrong (find with k.tokenizer.phonemize)
 PHONEME_FIX = [("lˈʌstɪɡ", "lˈuːstɪɡ"), ("pˈɔɪsən", "pwɑːsˈɔn"), ("kɹˈɪlən", "kɹiːjˈɔn"), ("ændɹˈeɪ", "ɑːndɹˈeɪ")]

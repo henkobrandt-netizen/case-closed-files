@@ -78,4 +78,28 @@ SHORT = [
  ("s_twist", [("But his biggest forgery wasn't a painting. Full story on the channel.", "But his biggest forgery|wasn't a painting.")]),
 ]
 
+LONG_D_ = dict(LONG)
+
+# Three 60-90 s shorts, each its own mini story. None gives away the final twist.
+SHORTS = {
+ "a": [
+  ("hook_a", [("This man sold a fake painting to Hermann Göring. And it could have cost him his life.", "This man sold a fake painting|to Hermann Göring.|And it could have|cost him his life.")]),
+  ("cold", None), ("who", None),
+  ("cta_a", [("Part two: how he faked a three-hundred-year-old masterpiece. Follow, so you don't miss it.", "Part 2: how he faked|a 300-year-old masterpiece.|Follow so you don't miss it.")]),
+ ],
+ "b": [
+  ("hook_b", [("How do you fake a three-hundred-year-old masterpiece? One forger worked it out, step by step.", "How do you fake|a 300-year-old masterpiece?|One forger worked it out.")]),
+  ("method", None), ("target", None),
+  ("cta_b", [("Part three: the test that cracked the case. Follow for part three.", "Part 3: the test|that cracked the case.|Follow for part 3.")]),
+ ],
+ "c": [
+  ("hook_c", [("He told the police he forged a Vermeer. Nobody believed him. So he had to prove it.", "He told police|he forged a Vermeer.|Nobody believed him.|So he had to prove it.")]),
+  ("arrest", [
+   "May, nineteen forty-five. The Allies find Göring's Vermeer in a salt mine on the seventeenth. On the twenty-ninth, Dutch officers arrest van Meegeren in Amsterdam.",
+   LONG_D_["arrest"][1], LONG_D_["arrest"][2], LONG_D_["arrest"][3]]),
+  ("proof", None),
+  ("cta_c", [("But that wasn't his greatest forgery. The full case is on the channel.", "But that wasn't|his greatest forgery.|Full case on the channel.")]),
+ ],
+}
+
 PHONEME_FIX = [("mˈiːɡɚɹən", "mˈeɪɡəɹən"), ("ɡˈɜːɹɪŋ", "ɡˈɜːɹɪŋ"), ("dɪvˈɛntɚ", "dˈeɪvəntɚ"), ("kˈɔːɹɛmənz", "kˈoʊɹəmɑːns")]

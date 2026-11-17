@@ -518,3 +518,16 @@ def thumbnail(c, W, H, word):
     solid_stamp(c, "SOLD", W * .33, H * .5, 130, rot=-12)
     figure(c, W * .8, H + 30, 1.55, rim=GOLD)
     big_word(c, word, W * .75, H * .30, size, "#ffd36b")
+
+
+# ---------------- shorts (60-90 s, 9:16) ----------------
+from shorts import hook_card, cta_card
+def _tower(c, cx, cy, t, d):
+    tower(c, cx + 270, cy + 800, 560, color="#11131a", lattice=GOLD, reveal=eo(seg(t, 0, 1.2)), la=.35)
+SCENES["hook_a"] = hook_card(["HE SOLD THE", "EIFFEL TOWER."], stamp_text="NOT HIS", prop=_tower)
+SCENES["hook_b"] = hook_card(["SELL WHAT", "YOU DON'T OWN"], stamp_text="THE PLAN", prop=_tower, rim=GOLD)
+SCENES["hook_c"] = hook_card(["THE BUYER", "GOT SUSPICIOUS."], stamp_text="WHAT NOW?", prop=_tower)
+SCENES["cta_a"] = cta_card("CASE 001 · THE TOWER", "PART 2 NEXT")
+SCENES["cta_b"] = cta_card("CASE 001 · THE TOWER", "PART 3 NEXT")
+SCENES["cta_c"] = cta_card("CASE 001 · THE TOWER", "FULL CASE")
+SHORT_HITS += [("hook_a", -1, .15, .62), ("hook_b", -1, .15, .62), ("hook_c", -1, .15, .62)]

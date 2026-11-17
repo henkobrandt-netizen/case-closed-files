@@ -551,3 +551,19 @@ def thumbnail(c, W, H, word):
     solid_stamp(c, "FAKE", W * .3, H * .62, 110, rot=-12)
     figure(c, W * .8, H + 30, 1.55, hat=False, rim=GOLD)
     for i, ln in enumerate(word): big_word(c, ln, W * .76, H * .2 + i * size * 1.02, size, "#ffd36b")
+
+
+# ---------------- shorts (60-90 s, 9:16) ----------------
+from shorts import hook_card, cta_card
+def _art(seed):
+    def prop(c, cx, cy, t, d):
+        painting(c, cx, cy + 190, 440, 340, a=.85 * eo(seg(t, 0, .8)), seed=seed, glow=.6)
+    return prop
+SCENES["hook_a"] = hook_card(["SOLD A FAKE", "TO THE NAZIS."], stamp_text="DEATH PENALTY?", prop=_art(3))
+SCENES["hook_b"] = hook_card(["HOW TO FAKE", "A VERMEER"], stamp_text="STEP BY STEP", prop=_art(11), rim=GOLD)
+SCENES["hook_c"] = hook_card(["NOBODY", "BELIEVED HIM."], stamp_text="PROVE IT", prop=_art(31))
+SCENES["cta_a"] = cta_card("CASE 002 · THE FORGER", "PART 2 NEXT")
+SCENES["cta_b"] = cta_card("CASE 002 · THE FORGER", "PART 3 NEXT")
+SCENES["cta_c"] = cta_card("CASE 002 · THE FORGER", "FULL CASE")
+SHORT_HITS += [("hook_a", -1, .15, .62), ("hook_b", -1, .15, .62), ("hook_c", -1, .15, .62)]
+SHORT_VIEW = {}

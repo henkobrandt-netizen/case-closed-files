@@ -2,8 +2,11 @@
 
 usage: python3 pipeline/build.py episodes/<id> [stage] [--only a,b] [--at 0.3,0.7]
 stages: tts | plan | stills | render | audio | final | thumbs | qa | all (default)
-An episode folder holds: script.py (LONG, SHORT, PHONEME_FIX), scenes.py (SCENES,
-HITS, SHORT_HITS, WARM, thumbnail(), THUMB_WORDS), meta.json, description.txt.
+An episode folder holds: script.py (LONG, SHORTS, PHONEME_FIX), scenes.py (SCENES,
+HITS, SHORT_HITS, SHORT_VIEW, WARM, thumbnail(), THUMB_WORDS), meta.json, description.txt.
+SHORTS = {"a": [(sid, lines), ...], "b": ..., "c": ...}: every short 60-90 s. lines=None reuses
+the LONG lines of that scene verbatim; long scenes are shown through shorts.vframe.
+--names long,short_a limits render/audio/final/qa to those cuts (old single SHORT still works).
 Outputs go to <episode>/work (scratch, not committed) and media/<id>/ (committed).
 """
 import sys, os, re, json, glob, importlib.util, subprocess, shutil
@@ -22,6 +25,18 @@ S = load("script")
 def arg(flag):
     return sys.argv[sys.argv.index(flag) + 1] if flag in sys.argv else None
 def sh(cmd): subprocess.run(cmd, shell=True, check=True)
+LONG_D = dict(S.LONG)
+def cuts():
+    """name -> list of (sid, lines) for every video this episode makes"""
+    out = {"long": S.LONG}
+    if hasattr(S, "SHORTS"):
+        for k, seq in S.SHORTS.items(): out[f"short_{k}"] = [(sid, LONG_D[sid] if ls is None else ls) for sid, ls in seq]
+    else: out["short"] = S.SHORT
+    return out
+CUTS = cuts()
+def names():
+    n = arg("--names"); return [x for x in CUTS if not n or x in n.split(",")]
+def is_short(name): return name != "long"
 
 # ---------------------------------------------------------------- narration
 def tts():
@@ -31,7 +46,8 @@ def tts():
     fix = getattr(S, "PHONEME_FIX", [])
     os.makedirs(AUD, exist_ok=True); meta = {}
     cache = json.load(open(f"{AUD}/meta.json")) if os.path.exists(f"{AUD}/meta.json") else {}
-    for name, seq in (("long", S.LONG), ("short", S.SHORT)):
+    bytext = {v["text"]: k_ for k_, v in cache.items()}
+    for name, seq in CUTS.items():
         for sid, lines in seq:
             for i, l in enumerate(lines):
                 t = l[0] if isinstance(l, tuple) else l
@@ -39,6 +55,8 @@ def tts():
                 key = f"{name}_{sid}_{i}"; fn = f"{AUD}/{key}.wav"
                 if key in cache and cache[key]["text"] == t and os.path.exists(fn):
                     meta[key] = cache[key]; continue
+                if t in bytext and os.path.exists(f"{AUD}/{bytext[t]}.wav"):   # same line already spoken in another cut
+                    shutil.copy(f"{AUD}/{bytext[t]}.wav", fn); meta[key] = dict(cache[bytext[t]]); continue
                 outs = []
                 for sent in re.split(r'(?<=[.?!:])\s+', t):
                     if not sent.strip(): continue
@@ -59,7 +77,7 @@ def tts():
 def plan(name):
     from engine import FPS
     meta = json.load(open(f"{AUD}/meta.json"))
-    seq = S.LONG if name == "long" else S.SHORT
+    seq = CUTS[name]
     pad = C.LONG_PAD if name == "long" else C.SHORT_PAD; out = []; T = 0
     for sid, lines in seq:
         if sid in C.FIXED and not any((l[0] if isinstance(l, tuple) else l) for l in lines):
@@ -76,42 +94,54 @@ def caps_for(sc):
     from engine import wrap
     caps = []
     for l in sc["lines"]:
-        if not l["cap"]: continue
-        parts = l["cap"].split("|"); tot = sum(len(p) for p in parts); t = l["rel"]
+        from shorts import auto_chunks, years
+        if l["cap"]: parts = l["cap"].split("|")
+        else: parts = auto_chunks(years(json.load(open(f"{AUD}/meta.json"))[l["key"]]["text"]))
+        tot = sum(len(p) for p in parts); t = l["rel"]
         for j, p in enumerate(parts):
             dd = l["dur"] * len(p) / tot; caps.append((t, t + dd + (.25 if j == len(parts) - 1 else 0), wrap(p, "sansb", 54, 960))); t += dd
     return caps
 
 def _job(a):
-    name, sc, still = a
+    name, sc, still, hdr = a
     from engine import render_scene, seg
     sc_mod = load("scenes"); W, H = (1920, 1080) if name == "long" else (1080, 1920)
     w = getattr(sc_mod, "WARM", {}).get(sc["sid"], 0.0)
     warm = (lambda t, d, w=w, c=sc["cues"]: w(t, d, c)) if callable(w) else w
-    caps = caps_for(sc) if name == "short" else None
-    fn = sc_mod.SCENES[sc["sid"]]
+    caps = caps_for(sc) if is_short(name) else None
+    fn = sc_mod.SCENES[sc["sid"]]; overlay = None
+    if is_short(name) and sc["sid"] in LONG_D:
+        from shorts import vframe
+        fn = vframe(fn, getattr(sc_mod, "SHORT_VIEW", {}).get(sc["sid"], "auto"))
+    if hdr:
+        from shorts import header
+        overlay = header(hdr[0], hdr[1], hdr[2], sc["start"], hdr[3])
+    out = f"{name}_{sc['sid']}"
     if still:
         os.makedirs(f"{WORK}/stills", exist_ok=True)
-        render_scene(fn, sc["dur"], sc["cues"], f"{WORK}/stills/{name}_{sc['sid']}", W, H, warm=warm, captions=caps, still=[f * sc["dur"] for f in still])
+        render_scene(fn, sc["dur"], sc["cues"], f"{WORK}/stills/{out}", W, H, warm=warm, captions=caps, still=[f * sc["dur"] for f in still], overlay=overlay)
     else:
         os.makedirs(f"{WORK}/{name}", exist_ok=True)
-        render_scene(fn, sc["dur"], sc["cues"], f"{WORK}/{name}/{sc['sid']}.mp4", W, H, warm=warm, captions=caps)
-    return sc["sid"]
+        render_scene(fn, sc["dur"], sc["cues"], f"{WORK}/{name}/{sc['sid']}.mp4", W, H, warm=warm, captions=caps, overlay=overlay)
+    return out
 
 def render(still=None):
     only = arg("--only"); jobs = []
-    for name in ("long", "short"):
-        pl, _ = plan(name)
+    shorts = [n for n in CUTS if n.startswith("short_")]; case = int(EID.split("-")[0])
+    for name in names():
+        pl, T = plan(name)
+        hdr = (case, shorts.index(name) + 1, len(shorts), T) if name in shorts else None
         for sc in pl:
             if only and sc["sid"] not in only.split(","): continue
-            jobs.append((name, sc, still))
+            jobs.append((name, sc, still, hdr))
     jobs.sort(key=lambda j: -j[1]["dur"])
     with Pool(os.cpu_count()) as p:
         for sid in p.imap_unordered(_job, jobs): print("rendered", sid, flush=True)
     if still:
-        for f in glob.glob(f"{WORK}/sheet_*.jpg"): os.remove(f)
-        for name in ("long", "short"):
+        for name in names():
+            for f in glob.glob(f"{WORK}/sheet_{name}_*.jpg"): os.remove(f)
             fs = sorted(glob.glob(f"{WORK}/stills/{name}_*.png"))
+            fs = [f for f in fs if name != "short" or not os.path.basename(f).startswith("short_")]
             per = 12 if name == "long" else 10
             for i in range(0, len(fs), per):
                 ins = " ".join(f"-i {f}" for f in fs[i:i + per]); n = len(fs[i:i + per])
@@ -164,7 +194,8 @@ def audio(name):
     mus = mus[:N]
     # stamp hits: (scene, line index or -1 for whole scene, offset s, fraction of that span)
     sc_mod = load("scenes"); Sd = {s["sid"]: s for s in pl}; sfx = np.zeros(N)
-    for sid, li, off, frac in getattr(sc_mod, "HITS" if name == "long" else "SHORT_HITS", []):
+    hits = getattr(sc_mod, "HITS", []) if name == "long" else getattr(sc_mod, "SHORT_HITS", []) + (getattr(sc_mod, "HITS", []) if name != "short" else [])
+    for sid, li, off, frac in hits:
         if sid not in Sd: continue
         s = Sd[sid]
         if li < 0: a, d = s["start"], s["dur"]
@@ -184,7 +215,8 @@ def audio(name):
 # ---------------------------------------------------------------- assemble
 def final():
     os.makedirs(MEDIA, exist_ok=True)
-    for name, cap in (("long", C.LONG_MAX_MB), ("short", C.SHORT_MAX_MB)):
+    for name in names():
+        cap = C.LONG_MAX_MB if name == "long" else C.SHORT_MAX_MB
         pl, T = plan(name)
         open(f"{WORK}/{name}.txt", "w").write("".join(f"file '{WORK}/{name}/{s['sid']}.mp4'\n" for s in pl))
         sh(f"ffmpeg -y -loglevel error -f concat -safe 0 -i {WORK}/{name}.txt -c copy {WORK}/{name}_video.mp4")
@@ -209,7 +241,7 @@ def thumbs():
     sh(f'ffmpeg -y -loglevel error {ins} -filter_complex "{fc}" {WORK}/thumb_check.png'); print("thumbs ok")
 
 def qa():
-    for name in ("long", "short"):
+    for name in names():
         f = f"{MEDIA}/{name}.mp4"
         out = subprocess.run(f"ffprobe -v error -show_entries format=duration,size -of csv=p=0 {f}", shell=True, capture_output=True, text=True).stdout.strip()
         lu = subprocess.run(f"ffmpeg -hide_banner -i {f} -af ebur128=framelog=quiet -f null - 2>&1 | grep -E ' I:' | tail -1", shell=True, capture_output=True, text=True).stdout.strip()
@@ -223,11 +255,12 @@ if __name__ == "__main__":
     stage = sys.argv[2] if len(sys.argv) > 2 and not sys.argv[2].startswith("--") else "all"
     if stage in ("tts", "all"): tts()
     if stage == "plan":
-        for n in ("long", "short"):
+        for n in names():
             pl, T = plan(n); [print(n, s["sid"], round(s["start"], 1), s["dur"]) for s in pl]; print(n, "TOTAL", round(T, 1))
     if stage == "stills": render(still=[float(x) for x in (arg("--at") or "0.3,0.65,0.95").split(",")])
     if stage in ("render", "all"): render()
-    if stage in ("audio", "all"): audio("long"); audio("short")
+    if stage in ("audio", "all"):
+        for n in names(): audio(n)
     if stage in ("final", "all"): final()
     if stage in ("thumbs", "all"): thumbs()
     if stage in ("qa", "all"): qa()
