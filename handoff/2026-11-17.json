@@ -1,0 +1,75 @@
+{
+ "title": "TikTok posting kit: 18-20 Nov",
+ "calendar": "Case Closed Files",
+ "posts": [
+  {
+   "when": "2026-11-18 12:00",
+   "case": "Case 001",
+   "part": 1,
+   "title": "He sold the Eiffel Tower. He didn't own it.",
+   "video": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/001-eiffel-tower/short_a.mp4",
+   "caption": "He sold the Eiffel Tower. He didn't own it. 🗼 Part 1/3\n\nParis, 1925. A fake count, a forged government letter, and a scrap dealer about to hand over a fortune.\n\nFollow for Part 2 👀 Full case on YouTube: Case Closed Files\n#truecrime #conman #history #eiffeltower #storytime #fyp"
+  },
+  {
+   "when": "2026-11-18 19:00",
+   "case": "Case 001",
+   "part": 2,
+   "title": "How to sell something you don't own",
+   "video": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/001-eiffel-tower/short_b.mp4",
+   "caption": "How do you sell something you don't own? 📰 Part 2/3\n\nA money box that 'printed' cash, a newspaper story, and a forged government letterhead.\n\nFollow for Part 3 👀 Full case on YouTube: Case Closed Files\n#truecrime #conman #history #eiffeltower #storytime #fyp"
+  },
+  {
+   "when": "2026-11-19 12:00",
+   "case": "Case 001",
+   "part": 3,
+   "title": "The buyer got suspicious. The con man didn't panic.",
+   "video": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/001-eiffel-tower/short_c.mp4",
+   "caption": "His buyer got suspicious. The con man didn't panic. 🤝 Part 3/3\n\nWhat Victor Lustig did next is the reason con men still study him.\n\nFull case on YouTube: Case Closed Files\n#truecrime #conman #history #eiffeltower #storytime #fyp"
+  },
+  {
+   "when": "2026-11-19 19:00",
+   "case": "Case 002",
+   "part": 1,
+   "title": "He sold a fake Vermeer to the Nazis",
+   "video": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/002-van-meegeren/short_a.mp4",
+   "caption": "He sold a fake Vermeer to the Nazis. 🖼️ Part 1/3\n\n1945. The charge: selling a national treasure to the enemy. His only defence: 'I painted it myself.'\n\nFollow for Part 2 👀 Full case on YouTube: Case Closed Files\n#truecrime #artforgery #history #vermeer #storytime #fyp"
+  },
+  {
+   "when": "2026-11-20 12:00",
+   "case": "Case 002",
+   "part": 2,
+   "title": "How he faked a 300-year-old masterpiece",
+   "video": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/002-van-meegeren/short_b.mp4",
+   "caption": "How do you fake a 300-year-old masterpiece? 🎨🔥 Part 2/3\n\nOld canvas, hand-ground paint, an early plastic, and an oven.\n\nFollow for Part 3 👀 Full case on YouTube: Case Closed Files\n#truecrime #artforgery #history #vermeer #storytime #fyp"
+  },
+  {
+   "when": "2026-11-20 19:00",
+   "case": "Case 002",
+   "part": 3,
+   "title": "Nobody believed he forged it. So he proved it.",
+   "video": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/002-van-meegeren/short_c.mp4",
+   "caption": "Nobody believed he forged it. So he proved it. 🧪 Part 3/3\n\nUnder guard, in front of witnesses, he painted one last fake. Then scientists found plastic in the paint.\n\nFull case on YouTube: Case Closed Files\n#truecrime #artforgery #history #vermeer #storytime #fyp"
+  }
+ ],
+ "todos": [
+  {
+   "when": "2026-11-17 18:00",
+   "minutes": 15,
+   "title": "Set up the Case Closed Files TikTok profile",
+   "notes": "Edit profile: name 'Case Closed Files'. Photo: https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/branding/avatar.png . Bio: 'True cons & heists, animated 🕵️ New case every week. Full cases on YouTube ↓'. Add your YouTube channel @CaseClosedFilesTV under Social."
+  },
+  {
+   "when": "2026-11-17 18:15",
+   "minutes": 15,
+   "title": "Finish the caseclosed.files Instagram profile",
+   "notes": "In the Instagram app: profile photo (same avatar.png), name 'Case Closed Files · True Crime', link https://www.youtube.com/@CaseClosedFilesTV . Skip if already done."
+  },
+  {
+   "when": "2026-11-18 12:30",
+   "minutes": 10,
+   "rrule": "FREQ=WEEKLY;BYDAY=MO,WE,FR",
+   "title": "Check Claude: approve the new Case Closed Files episode",
+   "notes": "The robot makes a new episode on Mon, Wed and Fri mornings. Open the chat, check the drafts, say yes. It also sends a new TikTok kit and reminders file to add."
+  }
+ ]
+}
