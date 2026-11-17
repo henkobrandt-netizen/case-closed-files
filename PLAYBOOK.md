@@ -75,6 +75,10 @@ Pull 6 frames from the final long.mp4 and look at them.
    the same time: YouTube (public, title "... (Part N/3) #shorts"), Instagram, TikTok
    (PUBLIC_TO_EVERYONE, allowComment true, musicUsageConfirmed true: the user chose these 17 Nov 2026).
    Short slots: 12:00 and 19:00 SAST, the next free ones after the long, parts in order.
+   Accounts: YouTube UCwu-WpflQQiUYFDwYOQxMug, Instagram 29969156796002355, TikTok = only the
+   Case Closed Files account in vidiq_social_account_list. NEVER Vice City Moments
+   (_000uVwT74MhVnXlVEc3loFY7qs5fEQAOUfu) or The Build Bill. No Case Closed Files TikTok linked yet:
+   leave TikTok out and say so.
 4. Send the user ONE message with the drafts. Publish only after they say yes.
 5. Log the episode in `episodes/LOG.md` and mark the topic taken in BACKLOG.md. Commit + push.
 
