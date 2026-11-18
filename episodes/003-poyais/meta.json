@@ -1,4 +1,23 @@
-{"number": 3, "title": "Poyais: The Con Man Who Invented a Country",
- "tags": ["poyais", "gregor macgregor", "the con man who invented a country", "fake country scam", "poyais scheme", "greatest con of all time", "famous con artists", "history of fraud", "mosquito coast", "true crime animated", "history documentary", "case closed files"],
- "categoryId": 27, "madeForKids": false, "thumbnail": "thumb_1.jpg",
- "status": "built"}
+{
+ "number": 3,
+ "title": "How One Man Sold a Country That Didn't Exist",
+ "tags": [
+  "how one man sold a country that didn't exist",
+  "poyais",
+  "gregor macgregor",
+  "the con man who invented a country",
+  "fake country scam",
+  "poyais scheme",
+  "greatest con of all time",
+  "famous con artists",
+  "history of fraud",
+  "mosquito coast",
+  "true crime animated",
+  "history documentary",
+  "case closed files"
+ ],
+ "categoryId": 27,
+ "madeForKids": false,
+ "thumbnail": "thumb_1.jpg",
+ "status": "scheduled"
+}

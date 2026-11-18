@@ -20,7 +20,27 @@ bash pipeline/setup.sh
 - Note every number, date and name with its source in `episodes/<id>/sources.md`.
 - Where sources disagree, the script must say so ("accounts differ", "the story goes").
 
+## 2b. Packaging research (vidIQ, about 5-10 credits)
+- `vidiq_outliers` with the case's topic (long-form, minEngagementRate 0.02): see how breakout videos
+  on the same or similar story are titled and framed. If one clearly broke out, `vidiq_video_transcript`
+  on it (5 credits) and study its first 2 minutes. Never copy wording; learn the shape.
+
 ## 3. Write the script (skills: youtube-long-form, storytelling-and-narrative, hook-writer)
+### Retention rules (the user wants people to watch to the end, 18 Nov 2026)
+Learned from a 3.8x breakout con documentary (Lume, "$7 Million in Fake Money... Toilet Paper"):
+- Cold open = ONE concrete scene, present tense, a precise place and time, seen through someone's
+  eyes (a witness, an officer, a settler). Small physical details (a bill handed through a window).
+  End on a question the whole video answers. No summary of the story in the cold open.
+- Then jump back: "It had begun three years earlier." Hold back the big name or the method reveal
+  for a while; the viewer should be asking "who?" or "how?".
+- Promise one strange, specific detail early (the title's absurd thing) and pay it off around the
+  middle (40-60%), not in the first minute.
+- Escalate with concrete numbers and dates every 30-60 s (amounts, counts, ranks). Rising stakes.
+- Every 60-90 s: an open loop or a turn ("But there was a problem." "Then the numbers began to climb.").
+- One "how it actually worked" stretch, step by step, with physical objects on screen.
+- Ending: call back to the small detail from the cold open ("it all ended because of a twenty-dollar
+  bill spent on fried chicken"), then a last open line about what happened after. Short sentences.
+
 - Target 1,350-1,500 words: about 8-9 minutes at 180 wpm. 8 min+ lets YouTube run mid-roll ads.
 - Structure: cold open (most tense moment, under 30 s, ends on a question) → title card →
   who → the setup → the trick (show HOW it worked, step by step) → the doubt → the save →
@@ -61,7 +81,11 @@ Pull 6 frames from the final long.mp4 and look at them.
 ## 6. Thumbnail + metadata (skills: thumbnail-design, youtube-publishing-and-metadata)
 - Thumbnail: one hero object + one silhouette + 0-3 bold outlined words that do NOT repeat the title.
   Must read in greyscale at 168 px wide (`work/thumb_check.png`). Make 3 variants for A/B.
-- Title: under 60 characters, main keyword first, curiosity without lying.
+- Title: under 60 characters, curiosity without lying. Write 5 options; strong formulas:
+  "How One Man [huge result] [with/using a tiny, strange thing]", "The [person] Who [impossible deed]".
+  Score the best 3 with `vidiq_score_title` (type long, channelId; 15 credits). Use the highest
+  (aim 90+). 003: "Poyais: The Con Man Who Invented a Country" scored 85, "How One Man Sold a Country
+  That Didn't Exist" scored 97. Put the main keyword in the first line of the description and tags.
 - `description.txt`: 300-500 words. Line 1 = hook. Keyword in lines 2-3. Chapters from the qa
   output (first one 0:00). About-the-channel paragraph. Sources note + "synthetic voice" note.
 - `meta.json`: title, tags (first = exact title keyword), categoryId 27, madeForKids false.
@@ -91,4 +115,5 @@ Pull 6 frames from the final long.mp4 and look at them.
 - Same voice every episode (config.py). Same look. Same "CASE CLOSED" outro.
 - Never invent facts, quotes, or numbers. Hedge disputed claims on screen and in narration.
 - No copyrighted music, art, footage, logos or characters.
-- vidIQ credits are scarce (free plan): uploads and posting are free, scoring/generation is not.
+- vidIQ credits: the user allows them, used sparingly (18 Nov 2026). Budget per episode about 25-30:
+  outliers 5, transcript 5 (optional), title scores 15. Uploads and posting are free. No AI video/image/voice generation.
