@@ -1,0 +1,90 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Case Closed Files//Handoff//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Case Closed Files
+X-WR-TIMEZONE:Africa/Johannesburg
+REFRESH-INTERVAL;VALUE=DURATION:PT6H
+X-PUBLISHED-TTL:PT6H
+BEGIN:VEVENT
+UID:497858a1-da36-57a1-9b81-4960d9c4f332@caseclosedfiles
+DTSTAMP:20261118T091214Z
+DTSTART:20261121T100000Z
+DTEND:20261121T101500Z
+SUMMARY:Post on TikTok: Case 003 Part 1/3
+DESCRIPTION:He sold land in a country that didn't exist\nVideo: https://ra
+ w.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/
+ 003-poyais/short_a.mp4\nCaption:\nHe sold land in a country that didn't e
+ xist. 🏝️ Part 1/3\n\n1823. Settlers land on the Mosquito Coast looki
+ ng for a capital city with a cathedral\, a bank and an opera house. There
+  is only jungle.\n\nFollow for Part 2 👀 Full case on YouTube: Case Clo
+ sed Files\n#truecrime #conman #history #poyais #storytime #fyp\nSettings:
+  Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/003-poyais/short_a.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 1/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 1/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e5af493f-e65d-5083-a66d-73dd287640f7@caseclosedfiles
+DTSTAMP:20261118T091214Z
+DTSTART:20261121T170000Z
+DTEND:20261121T171500Z
+SUMMARY:Post on TikTok: Case 003 Part 2/3
+DESCRIPTION:How to sell a fake country to London\nVideo: https://raw.githu
+ busercontent.com/henkobrandt-netizen/case-closed-files/main/media/003-poy
+ ais/short_b.mp4\nCaption:\nHow do you sell a country that doesn't exist? 
+ 📜 Part 2/3\n\nA flag\, a guidebook with rivers of gold\, land by the a
+ cre\, and a £200\,000 loan on the London Stock Exchange.\n\nFollow for P
+ art 3 👀 Full case on YouTube: Case Closed Files\n#truecrime #conman #h
+ istory #poyais #storytime #fyp\nSettings: Everyone\, comments on\, AI lab
+ el on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/003-poyais/short_b.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 2/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 2/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bbff4248-ab13-5d9b-b0d0-6a3a4ec3ba2e@caseclosedfiles
+DTSTAMP:20261118T091214Z
+DTSTART:20261122T100000Z
+DTEND:20261122T101500Z
+SUMMARY:Post on TikTok: Case 003 Part 3/3
+DESCRIPTION:250 settlers went looking for a city from a guidebook\nVideo: 
+ https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/m
+ ain/media/003-poyais/short_c.mp4\nCaption:\n250 settlers sailed to a city
+  from a guidebook. 🌴 Part 3/3\n\nThey landed at the Black River and we
+ nt looking for St Joseph. No streets. No bank. No opera house.\n\nFull ca
+ se on YouTube: Case Closed Files\n#truecrime #conman #history #poyais #st
+ orytime #fyp\nSettings: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/003-poyais/short_c.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 3/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 3/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

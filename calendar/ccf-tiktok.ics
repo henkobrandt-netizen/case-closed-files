@@ -9,7 +9,7 @@ REFRESH-INTERVAL;VALUE=DURATION:PT6H
 X-PUBLISHED-TTL:PT6H
 BEGIN:VEVENT
 UID:4841450e-9290-5b84-86aa-b61b25d22962@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261118T100000Z
 DTEND:20261118T101500Z
 SUMMARY:Post on TikTok: Case 001 Part 1/3
@@ -36,7 +36,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:6b2c0eee-0646-5d96-b324-7a60ca63f90c@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261118T170000Z
 DTEND:20261118T171500Z
 SUMMARY:Post on TikTok: Case 001 Part 2/3
@@ -62,7 +62,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:8bbade2f-c510-5526-b9eb-1803703809b4@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261119T100000Z
 DTEND:20261119T101500Z
 SUMMARY:Post on TikTok: Case 001 Part 3/3
@@ -88,7 +88,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bb90ca51-bff0-5fb4-b9ac-3c048cc71b44@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261119T170000Z
 DTEND:20261119T171500Z
 SUMMARY:Post on TikTok: Case 002 Part 1/3
@@ -114,7 +114,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:62445f8a-e0e5-54ff-8196-ce0f77cc012b@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261120T100000Z
 DTEND:20261120T101500Z
 SUMMARY:Post on TikTok: Case 002 Part 2/3
@@ -140,7 +140,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:6a0fb59d-fd24-5f64-a6fb-18d4f4e343c1@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261120T170000Z
 DTEND:20261120T171500Z
 SUMMARY:Post on TikTok: Case 002 Part 3/3
@@ -166,7 +166,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:9af4f3f3-7378-5d9e-9d34-1718cb7fd01e@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261117T160000Z
 DTEND:20261117T161500Z
 SUMMARY:Set up the Case Closed Files TikTok profile
@@ -188,7 +188,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:e9cbd27e-9814-502a-b5a8-5f85052960cc@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261117T161500Z
 DTEND:20261117T163000Z
 SUMMARY:Finish the caseclosed.files Instagram profile
@@ -208,7 +208,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:81b3d3e1-0aac-5d8a-a72e-77301941571d@caseclosedfiles
-DTSTAMP:20261117T145355Z
+DTSTAMP:20261118T091214Z
 DTSTART:20261118T103000Z
 DTEND:20261118T104000Z
 SUMMARY:Check Claude: approve the new Case Closed Files episode
@@ -224,6 +224,86 @@ END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Check Claude: approve the new Case Closed Files episode
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:497858a1-da36-57a1-9b81-4960d9c4f332@caseclosedfiles
+DTSTAMP:20261118T091214Z
+DTSTART:20261121T100000Z
+DTEND:20261121T101500Z
+SUMMARY:Post on TikTok: Case 003 Part 1/3
+DESCRIPTION:He sold land in a country that didn't exist\nVideo: https://ra
+ w.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/
+ 003-poyais/short_a.mp4\nCaption:\nHe sold land in a country that didn't e
+ xist. 🏝️ Part 1/3\n\n1823. Settlers land on the Mosquito Coast looki
+ ng for a capital city with a cathedral\, a bank and an opera house. There
+  is only jungle.\n\nFollow for Part 2 👀 Full case on YouTube: Case Clo
+ sed Files\n#truecrime #conman #history #poyais #storytime #fyp\nSettings:
+  Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/003-poyais/short_a.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 1/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 1/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e5af493f-e65d-5083-a66d-73dd287640f7@caseclosedfiles
+DTSTAMP:20261118T091214Z
+DTSTART:20261121T170000Z
+DTEND:20261121T171500Z
+SUMMARY:Post on TikTok: Case 003 Part 2/3
+DESCRIPTION:How to sell a fake country to London\nVideo: https://raw.githu
+ busercontent.com/henkobrandt-netizen/case-closed-files/main/media/003-poy
+ ais/short_b.mp4\nCaption:\nHow do you sell a country that doesn't exist? 
+ 📜 Part 2/3\n\nA flag\, a guidebook with rivers of gold\, land by the a
+ cre\, and a £200\,000 loan on the London Stock Exchange.\n\nFollow for P
+ art 3 👀 Full case on YouTube: Case Closed Files\n#truecrime #conman #h
+ istory #poyais #storytime #fyp\nSettings: Everyone\, comments on\, AI lab
+ el on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/003-poyais/short_b.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 2/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 2/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bbff4248-ab13-5d9b-b0d0-6a3a4ec3ba2e@caseclosedfiles
+DTSTAMP:20261118T091214Z
+DTSTART:20261122T100000Z
+DTEND:20261122T101500Z
+SUMMARY:Post on TikTok: Case 003 Part 3/3
+DESCRIPTION:250 settlers went looking for a city from a guidebook\nVideo: 
+ https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/m
+ ain/media/003-poyais/short_c.mp4\nCaption:\n250 settlers sailed to a city
+  from a guidebook. 🌴 Part 3/3\n\nThey landed at the Black River and we
+ nt looking for St Joseph. No streets. No bank. No opera house.\n\nFull ca
+ se on YouTube: Case Closed Files\n#truecrime #conman #history #poyais #st
+ orytime #fyp\nSettings: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/003-poyais/short_c.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 3/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 003 Part 3/3
 TRIGGER:-PT0M
 END:VALARM
 END:VEVENT

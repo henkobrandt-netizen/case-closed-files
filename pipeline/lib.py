@@ -381,3 +381,151 @@ def villa(c, x, y, s=1.0, a=1.0):
         for k in range(6):
             c.drawRect(skia.Rect.MakeXYWH(x - 290 * s + k * 100 * s, y - 230 * s + r * 110 * s, 50 * s, 70 * s), fill("#2e4f8f" if (k + r) % 3 else "#ffcf7a", a))
     for k in (-1, 1): c.drawCircle(x + k * 420 * s, y - 120 * s, 70 * s, fill("#2f5a3a", a)); c.drawRect(skia.Rect.MakeXYWH(x + k * 420 * s - 8 * s, y - 70 * s, 16 * s, 70 * s), fill("#3a2a1a", a))
+
+
+# ======================= added for 003, reusable =======================
+def sea(ctx, t, y, a=1.0, color="#0b0e17", wave="#2c3550", n=5):
+    c = ctx.c; W, H = ctx.W, ctx.H
+    c.drawRect(skia.Rect.MakeLTRB(-400, y, W + 400, H + 400), fill(color, a))
+    for j in range(n):
+        P = skia.Path(); yy = y + 14 + j * 46
+        for i in range(-400, int(W) + 440, 40):
+            v = yy + math.sin(i * .012 + t * (1.2 + j * .2) + j) * (7 + j * 2)
+            P.moveTo(i, v) if i == -400 else P.lineTo(i, v)
+        c.drawPath(P, stroke(wave, 3, a * (.9 - j * .12)))
+
+def sailship(c, x, y, s=1.0, a=1.0, t=0.0, color="#0c0d12", sail="#d8cdb4", flag=None, sails=1.0):
+    """Three-masted sailing ship; (x, y) = waterline centre. flag: 'poyais' or None."""
+    c.save(); c.translate(x, y + math.sin(t * 1.3) * 4 * s); c.rotate(math.sin(t * .9) * 1.2); c.scale(s, s)
+    P = skia.Path(); P.moveTo(-260, -60); P.lineTo(250, -60); P.lineTo(300, -100); P.lineTo(200, 30); P.lineTo(-220, 30); P.lineTo(-280, -90); P.close()
+    c.drawPath(P, fill(color, a))
+    for k in range(9): c.drawRect(skia.Rect.MakeXYWH(-200 + k * 46, -46, 14, 10), fill(GOLD, .55 * a))
+    for mx, mh in ((-130, 360), (20, 420), (160, 330)):
+        c.drawRect(skia.Rect.MakeXYWH(mx - 5, -60 - mh, 10, mh), fill(color, a))
+        if sails > 0:
+            for j, (sw, sy) in enumerate(((150, .25), (125, .52), (95, .76))):
+                yy = -60 - mh * (1 - sy) - 10; hh = mh * .2
+                Q = skia.Path(); Q.moveTo(mx - sw / 2, yy - hh); Q.lineTo(mx + sw / 2, yy - hh)
+                Q.quadTo(mx + sw / 2 + 14, yy - hh / 2, mx + sw / 2 - 4, yy); Q.lineTo(mx - sw / 2 + 4, yy); Q.quadTo(mx - sw / 2 + 14, yy - hh / 2, mx - sw / 2, yy - hh); Q.close()
+                c.drawPath(Q, fill(sail, a * sails * .92))
+    if flag == "poyais":
+        fx, fy = 20, -60 - 420
+        poyais_flag(c, fx + 4, fy, 90, a, t)
+    c.restore()
+
+def poyais_flag(c, x, y, w, a=1.0, t=0.0):
+    """White field, green St George-style cross. (x, y) = top of pole side."""
+    h = w * .62; P = skia.Path(); n = 12
+    top = [(x + w * i / n, y + math.sin(t * 4 + i * .7) * w * .04 * i / n) for i in range(n + 1)]
+    for i, (px, py) in enumerate(top): P.moveTo(px, py) if i == 0 else P.lineTo(px, py)
+    for px, py in reversed(top): P.lineTo(px, py + h)
+    P.close(); c.drawPath(P, fill("#f2efe6", a))
+    c.save(); c.clipPath(P, True)
+    c.drawRect(skia.Rect.MakeXYWH(x + w * .42, y - w, w * .16, h + 2 * w), fill("#2f7a45", a))
+    c.drawRect(skia.Rect.MakeXYWH(x - 10, y + h * .4 + math.sin(t * 4 + 5) * w * .02, w + 20, h * .2), fill("#2f7a45", a))
+    c.restore()
+
+def palm(c, x, y, s=1.0, a=1.0, color="#07090d", t=0.0, lean=0.0):
+    c.save(); c.translate(x, y); c.scale(s, s)
+    P = skia.Path(); P.moveTo(-12, 0); P.quadTo(20 + lean * 60, -200, 30 + lean * 120, -380); P.lineTo(46 + lean * 120, -378); P.quadTo(36 + lean * 60, -200, 12, 0); P.close()
+    c.drawPath(P, fill(color, a)); hx, hy = 38 + lean * 120, -380
+    for k in range(7):
+        an = -math.pi / 2 + (k - 3) * .55 + math.sin(t * 1.5 + k) * .05
+        L = skia.Path(); L.moveTo(hx, hy)
+        ex, ey = hx + math.cos(an) * 190, hy + math.sin(an) * 70 + 90
+        L.quadTo(hx + math.cos(an) * 110, hy + math.sin(an) * 110 - 30, ex, ey)
+        L.quadTo(hx + math.cos(an) * 100, hy + math.sin(an) * 100 - 6, hx, hy + 8)
+        c.drawPath(L, fill(color, a))
+    c.restore()
+
+def jungle(ctx, t, a=1.0, shore=.78, rain=0.0, dusk=False):
+    """Swampy tropical shore: palms, undergrowth, still water. rain 0..1."""
+    c = ctx.c; W, H = ctx.W, ctx.H; base = H * shore
+    c.drawCircle(W * .78, H * .22, 260, fill("#c7d8a0" if not dusk else "#ffb45e", .06 * a, 90))
+    rnd = random.Random(31)
+    for k in range(22):
+        x = rnd.uniform(-60, W + 60); r = rnd.uniform(90, 220)
+        c.drawCircle(x, base - rnd.uniform(40, 160), r, fill("#0e1a14", a))
+    for k in range(9):
+        palm(c, -80 + k * 250 + rnd.uniform(-40, 40), base + 10, rnd.uniform(.8, 1.3), a, "#08110c", t, rnd.uniform(-.3, .3))
+    c.drawRect(skia.Rect.MakeLTRB(0, base, W, H), fill("#0a0f0e", a))
+    for j in range(4):
+        c.drawLine(0, base + 30 + j * 50, W, base + 30 + j * 50, stroke("#1f3a33", 2, a * (.5 - j * .1), cap=False))
+    if rain > 0:
+        r2 = random.Random(7)
+        for k in range(int(260 * rain)):
+            x = r2.uniform(0, W + 300); sp = r2.uniform(900, 1400); y = (r2.uniform(0, H) + t * sp) % (H + 100) - 50
+            c.drawLine(x - (y * .25), y, x - (y * .25) - 12, y + 40, stroke("#9fb4c8", 2, .35 * a * rain))
+
+def city_mirage(c, cx, base, a=1.0, p=1.0, color=GOLD):
+    """An imagined grand capital drawn in gold outline (St Joseph as advertised)."""
+    if a <= 0: return
+    st = stroke(color, 4, a * .9); gl = fill(color, .05 * a, 30)
+    def r(x, y, w, h):
+        c.drawRect(skia.Rect.MakeXYWH(cx + x, base - y - h, w, h), gl); c.drawRect(skia.Rect.MakeXYWH(cx + x, base - y - h, w, h), st)
+    c.save(); c.clipRect(skia.Rect.MakeLTRB(cx - 1000, base - 700 * eo(p) - 20, cx + 1000, base + 4))
+    r(-760, 0, 220, 160); r(-500, 0, 160, 230)
+    r(-300, 0, 300, 220); c.drawArc(skia.Rect.MakeXYWH(cx - 250, base - 220 - 110, 200, 220), 180, 180, False, st)  # cathedral dome
+    c.drawLine(cx - 150, base - 330, cx - 150, base - 390, st); c.drawLine(cx - 172, base - 368, cx - 128, base - 368, st)
+    r(40, 0, 320, 200)                                                                                                     # opera house
+    for k in range(6): c.drawLine(cx + 70 + k * 52, base - 20, cx + 70 + k * 52, base - 170, st)
+    P = skia.Path(); P.moveTo(cx + 30, base - 200); P.lineTo(cx + 200, base - 270); P.lineTo(cx + 370, base - 200); c.drawPath(P, st)
+    r(400, 0, 180, 260); r(620, 0, 160, 140)
+    c.drawLine(cx - 900, base, cx + 900, base, st)
+    c.restore()
+
+def guidebook(c, x, y, w, rot=0, a=1.0, lines=("SKETCH OF THE", "MOSQUITO SHORE"), by="Capt. Thomas Strangeways", year="1822"):
+    h = w * 1.42
+    c.save(); c.translate(x, y); c.rotate(rot)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2 + 12, -h / 2 + 18, w, h), 8, 8, fill("#000000", .6 * a, 20))
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2, -h / 2, w, h), 8, 8, fill("#5a2a20", a))
+    c.drawRect(skia.Rect.MakeXYWH(-w / 2, -h / 2, w * .06, h), fill("#3a1a14", a))
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2 + w * .12, -h / 2 + w * .1, w * .8, h - w * .2), 4, 4, stroke(GOLD, max(2, w * .008), a))
+    for i, s in enumerate(lines): text(c, s, w * .03, -h * .22 + i * w * .11, w * .085, "serifb", GOLD, a)
+    text(c, "including the territory of POYAIS", w * .03, -h * .22 + len(lines) * w * .11 + w * .02, w * .045, "serif", "#e9d29a", a)
+    c.drawCircle(w * .03, h * .12, w * .12, stroke(GOLD, max(2, w * .01), a))
+    text(c, "by " + by, w * .03, h * .33, w * .045, "serif", "#e9d29a", a)
+    text(c, year, w * .03, h * .4, w * .045, "serifb", GOLD, a)
+    c.restore()
+
+def poyais_note(c, x, y, w, rot=0, a=1.0, amount="ONE", stamp_p=0.0):
+    """Black-and-white engraved banknote (illustration of a Bank of Poyais dollar)."""
+    h = w * .48
+    c.save(); c.translate(x, y); c.rotate(rot)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2 + 6, -h / 2 + 9, w, h), 4, 4, fill("#000000", .5 * a, 10))
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2, -h / 2, w, h), 4, 4, fill("#efe8d6", a))
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2 + w * .03, -h / 2 + w * .03, w * .94, h - w * .06), 3, 3, stroke("#1d1a14", max(1, w * .008), a))
+    for k in range(18): c.drawLine(-w / 2 + w * .05, -h / 2 + w * .05 + k * h * .045, -w / 2 + w * .2, -h / 2 + w * .05 + k * h * .045, stroke("#1d1a14", max(.6, w * .002), .35 * a))
+    c.drawOval(skia.Rect.MakeXYWH(-w * .08, -h * .42, w * .16, h * .34), stroke("#1d1a14", max(1, w * .006), a))
+    c.drawRect(skia.Rect.MakeXYWH(-w * .02, -h * .38, w * .04, h * .26), fill("#1d1a14", .8 * a))
+    c.drawRect(skia.Rect.MakeXYWH(-w * .06, -h * .27, w * .12, h * .05), fill("#1d1a14", .8 * a))
+    text(c, "BANK OF POYAIS", 0, h * .06, w * .075, "serifb", "#1d1a14", a)
+    text(c, f"{amount} DOLLAR", 0, h * .2, w * .06, "serif", "#1d1a14", a)
+    text(c, "St. Joseph", -w * .33, h * .36, w * .035, "serif", "#3b3324", a)
+    text(c, "by order of his highness Gregor, Cazique", w * .14, h * .36, w * .03, "serif", "#3b3324", a)
+    text(c, "1", -w * .4, -h * .22, w * .09, "serifb", "#1d1a14", a); text(c, "1", w * .4, -h * .22, w * .09, "serifb", "#1d1a14", a)
+    if stamp_p > 0: stamp(c, "WORTHLESS", 0, 0, w * .11, stamp_p, rot=-10)
+    c.restore()
+
+def bond(c, x, y, w, rot=0, a=1.0, p=1.0, price=None):
+    """Illustration of a Poyais government bond certificate."""
+    h = w * .7; card(c, x, y, w, h, rot=rot, a=a, color="#efe3c4")
+    c.drawRect(skia.Rect.MakeXYWH(w * .03, w * .03, w * .94, h - w * .06), stroke("#5a4320", w * .006, a, cap=False))
+    c.drawRect(skia.Rect.MakeXYWH(w * .045, w * .045, w * .91, h - w * .09), stroke("#5a4320", w * .002, a, cap=False))
+    text(c, "POYAISIAN GOVERNMENT", w / 2, h * .17, w * .055, "serifb", "#2a2216", a, spacing=w * .004)
+    text(c, "LOAN OF £200,000 · 1822", w / 2, h * .26, w * .03, "serif", "#5a4d38", a, spacing=2)
+    typed(c, "BOND FOR ONE HUNDRED POUNDS", w / 2, h * .42, w * .04, seg(p, 0, .35), "typeb", "#1d1a14", a, align="c")
+    typed(c, "Interest: six per cent a year,", w / 2, h * .53, w * .034, seg(p, .3, .6), "type", "#1d1a14", a, align="c")
+    typed(c, "on all the revenues of Poyais.", w / 2, h * .61, w * .034, seg(p, .5, .8), "type", "#1d1a14", a, align="c")
+    if p > .8: text(c, "Gregor the First", w * .72, h * .82, w * .045, "serifb", "#1d1a14", a * seg(p, .8, 1))
+    c.drawCircle(w * .2, h * .78, w * .07, fill(RED, .85 * a)); c.drawCircle(w * .2, h * .78, w * .05, stroke("#f0d9b0", 2, .7 * a))
+    text(c, "ILLUSTRATION", w * .05, h - w * .05, w * .016, "sansb", "#8c7d60", a, align="l", spacing=2)
+    if price is not None: chip(c, price, w * .78, h * .14, a=a, size=w * .04)
+    c.restore()
+
+def dots(c, x, y, n, cols, p_red, red_n, a=1.0, r=11, gap=30, home_n=0):
+    """n people as dots in a grid; the first red_n go red (fading) as p_red runs 0..1."""
+    for i in range(n):
+        xx = x + (i % cols) * gap; yy = y + (i // cols) * gap
+        q = seg(p_red, i / n * .8, i / n * .8 + .2) if i < red_n else 0
+        c.drawCircle(xx, yy, r, fill(RED if q > 0 else WHITE, a * (1 - .65 * q)))
