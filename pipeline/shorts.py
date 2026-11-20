@@ -145,7 +145,7 @@ def header(case_no, part, parts, t0, total):
     """Top band drawn over every frame: case number, part, and a progress line."""
     def g(ctx, t):
         c = ctx.c; cx = ctx.cx
-        label(c, f"CASE {case_no:03d}  ·  PART {part} OF {parts}", cx, 238, 34, 1.0)
+        label(c, f"CASE {case_no:03d}  ·  PART {part} OF {parts}" if parts > 1 else f"CASE {case_no:03d}", cx, 238, 34, 1.0)
         p = clamp((t0 + t) / total); w = 560
         c.drawRoundRect(skia.Rect.MakeXYWH(cx - w / 2, 282, w, 8), 4, 4, fill("#ffffff", .14))
         c.drawRoundRect(skia.Rect.MakeXYWH(cx - w / 2, 282, w * p, 8), 4, 4, fill(GOLD, .9))

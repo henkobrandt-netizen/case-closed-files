@@ -95,7 +95,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const fmt=w=>{const[d,t]=w.split(' ');const x=new Date(d+'T12:00:00');return{t,d:x.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}};
 let saved={};try{saved=JSON.parse(localStorage.getItem('ccf-tt')||'{}')}catch(e){}
 document.getElementById('posts').innerHTML=D.posts.map((p,i)=>{const f=fmt(p.when);return `<article class="slip${saved[p.id]?' posted':''}" id="s${i}">
-<div><div class="when">${f.t}</div><div class="day">${f.d}</div></div><div><div class="tag">${esc(p.case)} · Part ${p.part} of 3</div><div class="ttl">${esc(p.title)}</div>
+<div><div class="when">${f.t}</div><div class="day">${f.d}</div></div><div><div class="tag">${esc(p.case)}${p.part?` · Part ${p.part} of 3`:''}</div><div class="ttl">${esc(p.title)}</div>
 <textarea id="c${i}" aria-label="Caption">${esc(p.caption)}</textarea>
 <div class="row"><a class="btn" href="${esc(p.video)}">Get video</a><button class="btn alt" data-i="${i}">Copy caption</button>
 <label class="done"><input type="checkbox" data-id="${esc(p.id)}" data-s="s${i}"${saved[p.id]?' checked':''}> Posted</label></div><div class="ok" id="k${i}"></div></div>
@@ -109,11 +109,11 @@ try{localStorage.setItem('ccf-tt',JSON.stringify(saved))}catch(err){}});
 
 if __name__ == "__main__":
     src = sys.argv[1]; spec = json.load(open(src)); base = os.path.splitext(src)[0]
-    for p in spec["posts"]: p.setdefault("id", f"{p['case']}-{p['part']}-{p['when']}")
+    for p in spec["posts"]: p.setdefault("id", f"{p['case']}-{p.get('part', 'short')}-{p['when']}")
     data = json.dumps({"posts": spec["posts"], "todos": spec["todos"]}, ensure_ascii=False).replace("</", "<\\/")
     open(base + ".html", "w").write(PAGE.replace("__TITLE__", html.escape(spec["title"])).replace("__DATA__", data))
     def reminders(spec):
-        return [{"when": p["when"], "title": f"Post on TikTok: {p['case']} Part {p['part']}/3", "url": p["video"],
+        return [{"when": p["when"], "title": f"Post on TikTok: {p['case']}" + (f" Part {p['part']}/3" if p.get('part') else ""), "url": p["video"],
                  "notes": f"{p['title']}\nVideo: {p['video']}\nCaption:\n{p['caption']}\nSettings: Everyone, comments on, AI label on."}
                 for p in spec["posts"]] + spec["todos"]
     rem = reminders(spec)

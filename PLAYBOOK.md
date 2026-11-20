@@ -47,21 +47,22 @@ Learned from a 3.8x breakout con documentary (Lume, "$7 Million in Fake Money...
   the payoff → the twist / unravel → the ending → one-line "still standing" style close → outro.
 - Re-hook every 60-90 s: a question, a reveal, or "but there was a problem".
 - Write numbers and years as words in the spoken text. Short sentences. Present tense in the cold open.
-- `SHORTS`: three parts, `{"a": [...], "b": [...], "c": [...]}`, each **60-100 s** (never under 60).
-  Each part is its own mini story from a different stretch of the episode:
-  a = cold open + who, b = the trick, c = the doubt / the test. Never give away the final twist.
-  Each part: `("hook_x", [(spoken, "caption|split")])` → 2-3 long scenes as `(sid, None)` (reuses the
+- `SHORTS`: ONE standalone Short, `{"a": [...]}`, **60-100 s** (never under 60). **Never parts, never
+  "Part 1/2/3", never "follow for part two"** (the user, 20 Nov 2026: parts flop).
+  It is a complete mini story on its own: hook → the trick (how it worked) → a payoff that lands
+  inside the Short. A viewer who never sees the long video must still get a full story.
+  `("hook_a", [(spoken, "caption|split")])` → 2-4 long scenes as `(sid, None)` (reuses the
   LONG lines, so the animation stays in sync; to reword, keep the same number of lines) →
-  `("cta_x", [(spoken, "caption")])`. CTA a/b: "Part two: ... Follow for part two."
-  CTA c: "The full case is on the channel." Check lengths with `build.py <ep> plan`.
+  `("cta_a", [(spoken, "caption")])`. CTA: "The full case is on the channel."
+  Check length with `build.py <ep> plan`.
 - Check names with `k.tokenizer.phonemize`; add fixes to `PHONEME_FIX`.
 
 ## 4. Animate (`episodes/<id>/scenes.py`)
 - One function per scene, named `sc_<scene id>`. Shorts reuse these: `pipeline/shorts.py` frames each
   line in 9:16 automatically (follows what appears, never slices text, pulls wider when needed),
   and adds the CASE / PART header, progress bar and auto captions.
-- Per part add `SCENES["hook_x"] = hook_card([2 big lines], stamp_text=..., prop=...)` and
-  `SCENES["cta_x"] = cta_card("CASE 00N · NAME", "PART 2 NEXT" | "PART 3 NEXT" | "FULL CASE")`.
+- Add `SCENES["hook_a"] = hook_card([2 big lines], stamp_text=..., prop=...)` and
+  `SCENES["cta_a"] = cta_card("CASE 00N · NAME", "FULL CASE")`. No PART header text.
   A bad auto frame can be pinned with `SHORT_VIEW = {"sid": 0.4}` (x as a fraction of 1920).
 - Reuse `pipeline/lib.py` pieces: figure, card/dossier, letter, newspaper, stamp, label, item
   checklist, route map, liner, two-person table, suspicion bar, chip, notes_pile, skylines...
@@ -69,13 +70,13 @@ Learned from a 3.8x breakout con documentary (Lume, "$7 Million in Fake Money...
   never a copyrighted artwork, logo or character. Real people only as silhouettes.
 - Label invented documents "RECONSTRUCTION" or "ILLUSTRATION".
 - Add `HITS` / `SHORT_HITS` for stamp thuds, `THUMB_WORDS` + `thumbnail()`.
-- Check: `python3 pipeline/build.py episodes/<id> stills` then look at every contact sheet (long and short_a/b/c).
+- Check: `python3 pipeline/build.py episodes/<id> stills` then look at every contact sheet (long and short_a).
   Fix overlaps, text off screen, empty frames, anything unreadable. Repeat until clean.
 
 ## 5. Build
 `python3 pipeline/build.py episodes/<id>` (tts → render → audio → final → thumbs → qa). ~30 min on 2 cores.
-QA must show: long ≤ 90 MB, each short ≤ 40 MB and 60-100 s, loudness about -16 LUFS, long ≥ 8:00.
-Use `--names short_a,short_b` to rebuild only some cuts.
+QA must show: long ≤ 90 MB, the short ≤ 40 MB and 60-100 s, loudness about -16 LUFS, long ≥ 8:00.
+Use `--names short_a` to rebuild only the short.
 Pull 6 frames from the final long.mp4 and look at them.
 
 ## 6. Thumbnail + metadata (skills: thumbnail-design, youtube-publishing-and-metadata)
@@ -93,18 +94,17 @@ Pull 6 frames from the final long.mp4 and look at them.
 ## 7. Publish
 1. Copy description into `media/<id>/`, commit `episodes/<id>` (not work/) and `media/<id>/`, push.
 2. vidIQ: `vidiq_video_upload` with `https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/<id>/long.mp4`
-   (and short_a/b/c.mp4). Thumbnail: `vidiq_upload_image` with the raw URL of thumb_1.jpg.
+   (and short_a.mp4). Thumbnail: `vidiq_upload_image` with the raw URL of thumb_1.jpg.
 3. `vidiq_social_post_draft_create`. Long: Case Closed Files YouTube, public, 17:00 SAST on the next
-   free day, thumbnailImageId. Each short part: ONE draft per part with three destinations, all at
-   the same time: YouTube (public, title "... (Part N/3) #shorts"), Instagram, TikTok
-   (PUBLIC_TO_EVERYONE, allowComment true, musicUsageConfirmed true: the user chose these 17 Nov 2026).
-   Short slots: 12:00 and 19:00 SAST, the next free ones after the long, parts in order.
+   free day, thumbnailImageId. The Short: ONE draft with two destinations at the same time: YouTube
+   (public, its own standalone title ending "#shorts", no "Part"), Instagram.
+   Short slot: 12:00 or 19:00 SAST, the next free one after the long.
    Accounts: YouTube UCwu-WpflQQiUYFDwYOQxMug, Instagram 29969156796002355. NEVER Vice City Moments
    (_000uVwT74MhVnXlVEc3loFY7qs5fEQAOUfu) or The Build Bill.
    **TikTok: the user posts it by hand** (decided 17 Nov 2026). Do not add a TikTok destination.
 3b. Hand-off (every run, the user asked for it): write `handoff/<date>.json` (copy the last one: title,
-   posts = the 3 parts with the same times as YouTube, TikTok captions "hook + Part N/3 + Follow for Part
-   N+1 + Full case on YouTube: Case Closed Files + 6 hashtags", todos = anything the user must do),
+   posts = the one Short (no "part" field) with the same time as YouTube, TikTok caption "hook + Full case on YouTube:
+   Case Closed Files + 6 hashtags" (no Part numbers), todos = anything the user must do),
    run `python3 pipeline/handoff.py handoff/<date>.json`, publish the .html as an artifact (the TikTok
    posting kit). It also rebuilds `calendar/ccf-tiktok.ics`, the feed the user's iPhone subscribes to:
    commit and push it, and the reminders appear on their phone by themselves. Don't send .ics files.
