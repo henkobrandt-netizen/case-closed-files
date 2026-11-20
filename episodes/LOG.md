@@ -5,6 +5,7 @@
 | 001 | The Man Who Sold the Eiffel Tower | 6:01 | 2026-11-15 | scheduled: long 16 Nov (youtu.be/3NIxRPhwRxw), short 17 Nov (YT + IG) |
 | 002 | The Forger Who Fooled the Nazis | 8:06 | 2026-11-15 | scheduled: long 18 Nov (youtu.be/_bp7Vixhaq0), short 19 Nov (YT + IG) |
 | 003 | How One Man Sold a Country That Didn't Exist (Poyais) | 8:25 | 2026-11-18 | scheduled: long Fri 20 Nov 17:00 (youtu.be/M3joMOp7rTQ); parts 1-3 (91 / 88 / 93 s) Sat 21 Nov 12:00 (youtu.be/eR-FmvaeaIo), Sat 21 Nov 19:00 (youtu.be/oPkL-w8lshg), Sun 22 Nov 12:00 (youtu.be/6c_Gb4O6PhI) SAST, YT + IG; TikTok by hand. Title changed after vidIQ score 85 -> 97 |
+| 004 | The $100 Million Diamond Heist Undone by Half a Sandwich (Antwerp 2003) | 8:24 | 2026-11-20 | drafts (awaiting yes): long Sat 21 Nov 17:00; parts 1-3 (79 / 93 / 94 s) Sun 22 Nov 19:00, Mon 23 Nov 12:00, Mon 23 Nov 19:00 SAST, YT + IG; TikTok by hand. Titles scored 87-88 |
 
 Channel: YouTube @CaseClosedFilesTV (UCwu-WpflQQiUYFDwYOQxMug). Instagram: caseclosed.files.
 

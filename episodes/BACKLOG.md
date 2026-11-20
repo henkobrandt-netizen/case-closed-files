@@ -3,7 +3,7 @@
 - [x] Victor Lustig sold the Eiffel Tower (001)
 - [x] Han van Meegeren: the forger who fooled the Nazis (002)
 - [x] Gregor MacGregor: the man who sold a country that didn't exist (Poyais) (003)
-- [ ] The Antwerp Diamond Heist, 2003: the "unbreakable" vault
+- [x] The Antwerp Diamond Heist, 2003: the "unbreakable" vault (004)
 - [ ] Vincenzo Peruggia: the man who stole the Mona Lisa (1911)
 - [ ] Charles Ponzi: the scheme with his name on it
 - [ ] Thérèse Humbert and the empty safe

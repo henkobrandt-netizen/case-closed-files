@@ -1,0 +1,90 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Case Closed Files//Handoff//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Case Closed Files
+X-WR-TIMEZONE:Africa/Johannesburg
+REFRESH-INTERVAL;VALUE=DURATION:PT6H
+X-PUBLISHED-TTL:PT6H
+BEGIN:VEVENT
+UID:2708061c-7396-53b5-8131-dc1ee3e2d1d6@caseclosedfiles
+DTSTAMP:20261120T094851Z
+DTSTART:20261122T170000Z
+DTEND:20261122T171500Z
+SUMMARY:Post on TikTok: Case 004 Part 1/3
+DESCRIPTION:10 layers of security\, 0 alarms\nVideo: https://raw.githubuse
+ rcontent.com/henkobrandt-netizen/case-closed-files/main/media/004-antwerp
+ /short_a.mp4\nCaption:\n10 layers of security. 0 alarms. 💎 Part 1/3\n\
+ nAntwerp\, 2003. A caretaker finds the most secure vault in the diamond d
+ istrict standing open. Meet the tenant who had been watching it for two y
+ ears.\n\nFollow for Part 2 👀 Full case on YouTube: Case Closed Files\n
+ #truecrime #heist #diamonds #antwerp #storytime #fyp\nSettings: Everyone\
+ , comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/004-antwerp/short_a.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 004 Part 1/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 004 Part 1/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e9ef0646-5e14-55d4-ba1d-54dac1165d29@caseclosedfiles
+DTSTAMP:20261120T094851Z
+DTSTART:20261123T100000Z
+DTEND:20261123T101500Z
+SUMMARY:Post on TikTok: Case 004 Part 2/3
+DESCRIPTION:How to open a vault with hairspray\nVideo: https://raw.githubu
+ sercontent.com/henkobrandt-netizen/case-closed-files/main/media/004-antwe
+ rp/short_b.mp4\nCaption:\nHow to open the safest vault in Antwerp. Step o
+ ne: hairspray. 🔐 Part 2/3\n\nA polyester shield\, an aluminium plate\,
+  tape\, a Styrofoam box and a foot-long key. Then box after box until 5:3
+ 0 am.\n\nFollow for Part 3 👀 Full case on YouTube: Case Closed Files\n
+ #truecrime #heist #diamonds #antwerp #storytime #fyp\nSettings: Everyone\
+ , comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/004-antwerp/short_b.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 004 Part 2/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 004 Part 2/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a5b35ece-11c6-593e-9230-364d2721c083@caseclosedfiles
+DTSTAMP:20261120T094851Z
+DTSTART:20261123T170000Z
+DTEND:20261123T171500Z
+SUMMARY:Post on TikTok: Case 004 Part 3/3
+DESCRIPTION:$100 million in diamonds\, undone by a bag of rubbish\nVideo: 
+ https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/m
+ ain/media/004-antwerp/short_c.mp4\nCaption:\n$100 million in diamonds. Un
+ done by a bag of rubbish. 🥪 Part 3/3\n\nThe Genius\, the Monster\, the
+  King of Keys and Speedy. And a retired grocer who hated litter.\n\nFull 
+ case on YouTube: Case Closed Files\n#truecrime #heist #diamonds #antwerp 
+ #storytime #fyp\nSettings: Everyone\, comments on\, AI label on.
+URL:https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-file
+ s/main/media/004-antwerp/short_c.mp4
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 004 Part 3/3
+TRIGGER:-PT10M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Post on TikTok: Case 004 Part 3/3
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

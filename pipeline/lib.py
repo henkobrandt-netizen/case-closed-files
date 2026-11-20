@@ -529,3 +529,302 @@ def dots(c, x, y, n, cols, p_red, red_n, a=1.0, r=11, gap=30, home_n=0):
         xx = x + (i % cols) * gap; yy = y + (i // cols) * gap
         q = seg(p_red, i / n * .8, i / n * .8 + .2) if i < red_n else 0
         c.drawCircle(xx, yy, r, fill(RED if q > 0 else WHITE, a * (1 - .65 * q)))
+
+
+# ======================= added for 004 (Antwerp heist), reusable =======================
+STEEL = "#3c4250"; STEEL2 = "#22262f"; ICE = "#cfe8ff"
+
+def sparkle(c, x, y, r, a=1.0, color="#ffffff"):
+    if a <= 0 or r <= 0: return
+    P = skia.Path(); P.moveTo(x, y - r); P.quadTo(x, y, x + r, y); P.quadTo(x, y, x, y + r); P.quadTo(x, y, x - r, y); P.quadTo(x, y, x, y - r); P.close()
+    c.drawCircle(x, y, r * .7, fill(color, .35 * a, r * .4)); c.drawPath(P, fill(color, a))
+
+def gem(c, x, y, s, a=1.0, color=ICE, rot=0, shine=0.0):
+    """Brilliant-cut diamond in profile. (x, y) = girdle centre, s = width."""
+    if a <= 0: return
+    c.save(); c.translate(x, y); c.rotate(rot)
+    w = s; ht = s * .27; hb = s * .55
+    P = skia.Path(); P.moveTo(-w / 2, 0); P.lineTo(-w * .28, -ht); P.lineTo(w * .28, -ht); P.lineTo(w / 2, 0); P.lineTo(0, hb); P.close()
+    c.drawPath(P, fill(color, .25 * a, s * .18))
+    sh = skia.GradientShader.MakeLinear(points=[(-w / 2, -ht), (w / 2, hb)], colors=[col("#ffffff", a), col(color, a), col("#6f8fb8", a)], positions=[0, .45, 1])
+    c.drawPath(P, skia.Paint(Shader=sh, AntiAlias=True))
+    st = stroke("#ffffff", max(1, s * .018), a * .75)
+    for (x0, y0, x1, y1) in ((-w / 2, 0, w / 2, 0), (-w * .28, -ht, -w * .12, 0), (w * .28, -ht, w * .12, 0), (0, -ht, -w * .12, 0), (0, -ht, w * .12, 0),
+                             (-w * .3, 0, 0, hb), (w * .3, 0, 0, hb), (-w * .12, 0, 0, hb), (w * .12, 0, 0, hb)):
+        c.drawLine(x0, y0, x1, y1, st)
+    c.drawPath(P, stroke("#ffffff", max(1, s * .022), a * .9))
+    c.restore()
+    if shine > 0: sparkle(c, x - s * .14, y - s * .16, s * .3 * shine, a * shine)
+
+def scatter_gems(c, x, y, w, h, n, a=1.0, seed=3, t=0.0, size=(14, 34)):
+    rnd = random.Random(seed)
+    for i in range(n):
+        gx = x + rnd.uniform(0, w); gy = y + rnd.uniform(0, h); s = rnd.uniform(*size)
+        tw_ = .5 + .5 * math.sin(t * 3 + i * 1.7)
+        gem(c, gx, gy, s, a * rnd.uniform(.6, 1), rot=rnd.uniform(-.6, .6) * 57, shine=tw_ * (1 if i % 4 == 0 else 0))
+
+def dial(c, x, y, r, a=1.0, rot=0.0, numbers=True):
+    """Combination dial 0-99. rot in degrees."""
+    c.drawCircle(x, y, r * 1.12, fill("#0a0b0f", a)); c.drawCircle(x, y, r * 1.12, stroke(GOLD, max(2, r * .04), a * .8))
+    sh = skia.GradientShader.MakeRadial(center=(x - r * .3, y - r * .3), radius=r * 1.4, colors=[col("#8a8f9c", a), col("#3a3e48", a)])
+    c.drawCircle(x, y, r, skia.Paint(Shader=sh, AntiAlias=True))
+    c.save(); c.translate(x, y); c.rotate(rot)
+    for k in range(100):
+        L = r * (.16 if k % 10 == 0 else .08); an = k / 100 * 2 * math.pi
+        c.drawLine(math.sin(an) * (r - 4), -math.cos(an) * (r - 4), math.sin(an) * (r - 4 - L), -math.cos(an) * (r - 4 - L), stroke("#f4efe4", max(1, r * (.02 if k % 10 == 0 else .01)), a * .9, cap=False))
+        if numbers and k % 10 == 0 and r > 60:
+            c.save(); c.rotate(k * 3.6); text(c, str(k), 0, -r * .62, r * .14, "sansb", "#f4efe4", a); c.restore()
+    c.drawCircle(0, 0, r * .3, fill("#1c1f27", a)); c.drawCircle(0, 0, r * .3, stroke("#9aa0ad", 2, a))
+    c.restore()
+    P = skia.Path(); P.moveTo(x - r * .07, y - r * 1.22); P.lineTo(x + r * .07, y - r * 1.22); P.lineTo(x, y - r * 1.05); P.close()
+    c.drawPath(P, fill(RED, a))
+
+def vault_door(c, x, y, r, a=1.0, open=0.0, rot=0.0, inside=None):
+    """Round vault door, front view. open 0..1 swings it on a left hinge. inside(c) draws behind it."""
+    c.drawCircle(x, y, r * 1.18, fill("#07080b", a)); c.drawCircle(x, y, r * 1.18, stroke("#4a505e", r * .05, a))
+    if open > 0:
+        c.save(); P = skia.Path(); P.addCircle(x, y, r * 1.1); c.clipPath(P, True)
+        c.drawCircle(x, y, r * 1.1, fill("#120f0a", a))
+        if inside: inside(c)
+        c.drawCircle(x, y, r * 1.1, fill("#ffcf7a", .18 * a * open, r * .4))
+        c.restore()
+    k = 1 - .86 * eio(open)
+    c.save(); c.translate(x - r * 1.1, y); c.scale(k, 1); c.translate(r * 1.1, 0)
+    sh = skia.GradientShader.MakeRadial(center=(-r * .35, -r * .4), radius=r * 1.6, colors=[col("#5d6473", a), col("#2a2e38", a), col("#15171d", a)], positions=[0, .6, 1])
+    c.drawCircle(0, 0, r, skia.Paint(Shader=sh, AntiAlias=True))
+    for rr in (.97, .8, .55): c.drawCircle(0, 0, r * rr, stroke("#0e1015", max(2, r * .015), a * .9))
+    for k2 in range(16):
+        an = k2 / 16 * 2 * math.pi; bx = math.cos(an) * r * .885; by = math.sin(an) * r * .885
+        c.drawCircle(bx, by, r * .045, fill("#7d8494", a)); c.drawCircle(bx, by, r * .045, stroke("#0e1015", 2, a))
+    for k2 in range(3):   # handle wheel
+        an = k2 / 3 * 2 * math.pi + math.radians(rot * .3)
+        c.drawLine(r * .42, r * .25, r * .42 + math.cos(an) * r * .2, r * .25 + math.sin(an) * r * .2, stroke("#9aa0ad", r * .035, a))
+    c.drawCircle(r * .42, r * .25, r * .05, fill("#9aa0ad", a))
+    c.restore()
+    if open < .5: dial(c, x - r * 1.1 + (r * 1.1) * k, y - r * .05, r * .3 * (1 if k > .9 else k), a * (1 - open * 2), rot=rot, numbers=r > 250)
+    c.drawRect(skia.Rect.MakeXYWH(x - r * 1.2, y - r * .5, r * .12, r), fill("#2b2f38", a))
+
+def deposit_wall(c, x, y, cols, rows, bw, bh, a=1.0, opened=0, seed=1, gems=True, t=0.0):
+    """Grid of safe-deposit boxes, top-left (x, y). opened = how many are forced open (random order)."""
+    order = list(range(cols * rows)); random.Random(seed).shuffle(order); op = set(order[:int(opened)])
+    c.drawRect(skia.Rect.MakeXYWH(x - 10, y - 10, cols * bw + 20, rows * bh + 20), fill("#0c0e13", a))
+    for r_ in range(rows):
+        for k in range(cols):
+            i = r_ * cols + k; bx = x + k * bw; by = y + r_ * bh
+            if i in op:
+                c.drawRect(skia.Rect.MakeXYWH(bx + 3, by + 3, bw - 6, bh - 6), fill("#050506", a))
+                if gems and i % 3 == 0: gem(c, bx + bw * .5, by + bh * .6, bw * .28, a * .8)
+                c.drawRect(skia.Rect.MakeXYWH(bx + bw * .8, by + 5, bw * .14, bh - 10), fill("#4a505e", a))
+            else:
+                sh = skia.GradientShader.MakeLinear(points=[(bx, by), (bx, by + bh)], colors=[col("#59606e", a), col("#363b46", a)])
+                c.drawRect(skia.Rect.MakeXYWH(bx + 3, by + 3, bw - 6, bh - 6), skia.Paint(Shader=sh, AntiAlias=True))
+                c.drawCircle(bx + bw * .5, by + bh * .5, min(bw, bh) * .12, fill("#20232b", a))
+                c.drawRect(skia.Rect.MakeXYWH(bx + bw * .5 - 1.5, by + bh * .5, 3, min(bw, bh) * .14), fill("#20232b", a))
+
+def key_long(c, x, y, L, rot=0, a=1.0, color=GOLD):
+    """Long two-part vault key; (x, y) = centre of the bow ring."""
+    c.save(); c.translate(x, y); c.rotate(rot)
+    r = L * .09; w = max(3, L * .035)
+    c.drawCircle(0, 0, r, stroke(color, w * 1.3, a)); c.drawCircle(0, 0, r * .35, fill(color, a))
+    c.drawRoundRect(skia.Rect.MakeXYWH(r, -w / 2, L - r, w), w / 2, w / 2, fill(color, a))
+    for i, (o, h) in enumerate(((.62, .7), (.72, 1.0), (.8, .55), (.9, .9))):
+        c.drawRect(skia.Rect.MakeXYWH(L * o, w / 2, L * .05, L * .07 * h), fill(color, a))
+    c.drawRect(skia.Rect.MakeXYWH(L * .3, -w * 1.2, L * .04, w * 2.4), fill(color, a))
+    c.restore()
+
+def sensor_icon(c, kind, x, y, s, color=GOLD, a=1.0):
+    """Glyph for one layer of security, about s px across."""
+    st = stroke(color, max(2, s * .07), a); f = fill(color, a)
+    if kind == "dial": dial(c, x, y, s * .42, a, numbers=False)
+    elif kind == "key": key_long(c, x - s * .45, y - s * .05, s * .95, 0, a, color)
+    elif kind == "seismic":
+        P = skia.Path(); P.moveTo(x - s * .5, y)
+        for i, v in enumerate((0, -.1, .3, -.45, .4, -.2, .1, 0)): P.lineTo(x - s * .5 + i * s / 7, y + v * s)
+        c.drawPath(P, st)
+    elif kind == "magnet":
+        c.drawRect(skia.Rect.MakeXYWH(x - s * .45, y - s * .3, s * .38, s * .6), f); c.drawRect(skia.Rect.MakeXYWH(x + s * .07, y - s * .3, s * .38, s * .6), f)
+        for k in (-.15, 0, .15): c.drawLine(x - s * .05, y + k * s, x + s * .05, y + k * s, stroke(color, 2, a))
+    elif kind == "heat":
+        c.drawArc(skia.Rect.MakeXYWH(x - s * .35, y - s * .3, s * .7, s * .7), 180, 180, True, f)
+        for k in (1, 2): c.drawArc(skia.Rect.MakeXYWH(x - s * (.35 + k * .12), y - s * (.3 + k * .12), s * (.7 + k * .24), s * (.7 + k * .24)), 200, 140, False, stroke(color, max(2, s * .05), a * (1 - k * .3)))
+    elif kind == "light":
+        P = skia.Path(); P.moveTo(x - s * .48, y); P.quadTo(x, y - s * .45, x + s * .48, y); P.quadTo(x, y + s * .45, x - s * .48, y); P.close()
+        c.drawPath(P, st); c.drawCircle(x, y, s * .15, f)
+    elif kind == "radar":
+        c.drawCircle(x - s * .3, y, s * .08, f)
+        for k in (1, 2, 3): c.drawArc(skia.Rect.MakeXYWH(x - s * .3 - k * s * .2, y - k * s * .2, k * s * .4, k * s * .4), -50, 100, False, stroke(color, max(2, s * .06), a * (1.1 - k * .25)))
+    elif kind == "camera":
+        c.drawRoundRect(skia.Rect.MakeXYWH(x - s * .45, y - s * .2, s * .65, s * .4), 6, 6, f)
+        P = skia.Path(); P.moveTo(x + s * .2, y - s * .1); P.lineTo(x + s * .45, y - s * .22); P.lineTo(x + s * .45, y + s * .22); P.lineTo(x + s * .2, y + s * .1); P.close(); c.drawPath(P, f)
+    elif kind == "grate":
+        for k in range(5): c.drawLine(x - s * .4 + k * s * .2, y - s * .4, x - s * .4 + k * s * .2, y + s * .4, st)
+        c.drawLine(x - s * .45, y, x + s * .45, y, st)
+    elif kind == "keypad":
+        for i in range(3):
+            for j in range(3): c.drawRoundRect(skia.Rect.MakeXYWH(x - s * .36 + i * s * .26, y - s * .36 + j * s * .26, s * .2, s * .2), 3, 3, f)
+
+def layer_tile(c, x, y, w, kind, name, a=1.0, beaten=0.0, color=GOLD):
+    """A square tile for one security layer; beaten 0..1 draws a red cross and dims it."""
+    if a <= 0: return
+    h = w * 1.18; dim = 1 - .45 * clamp(beaten)
+    c.drawRoundRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), 14, 14, fill("#11141b", a * .92))
+    c.drawRoundRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), 14, 14, stroke(color, 3, a * .7 * dim))
+    sensor_icon(c, kind, x, y - h * .1, w * .55, color, a * dim)
+    text(c, name, x, y + h * .36, w * .11, "sansb", WHITE, a * dim, spacing=2)
+    if beaten > 0: mark(c, x + w * .32, y - h * .34, w * .22, beaten, False)
+
+def extinguisher(c, x, y, s, a=1.0, cam=0.0, t=0.0):
+    """Red fire extinguisher; (x, y) = bottom centre, height ~ 300*s. cam>0 shows a hidden recorder light."""
+    c.save(); c.translate(x, y); c.scale(s, s)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-55, -250, 110, 250), 40, 40, fill("#a5281f", a))
+    c.drawRoundRect(skia.Rect.MakeXYWH(-40, -238, 26, 220), 13, 13, fill("#ffffff", .14 * a))
+    c.drawRect(skia.Rect.MakeXYWH(-50, -150, 100, 60), fill(PAPER, a * .9)); text(c, "FIRE", 0, -112, 26, "sansb", "#a5281f", a)
+    c.drawRect(skia.Rect.MakeXYWH(-18, -290, 36, 44), fill("#2a2d35", a)); c.drawRect(skia.Rect.MakeXYWH(-10, -306, 70, 16), fill("#2a2d35", a))
+    P = skia.Path(); P.moveTo(18, -280); P.cubicTo(90, -270, 100, -150, 70, -60); c.drawPath(P, stroke("#15171d", 12, a))
+    if cam > 0:
+        bl = .5 + .5 * math.sin(t * 6)
+        c.drawCircle(0, -200, 12, fill("#000000", a * cam)); c.drawCircle(0, -200, 6, fill("#ff3b30", a * cam * bl)); c.drawCircle(0, -200, 26, fill("#ff3b30", .3 * a * cam * bl, 10))
+    c.restore()
+
+def spray_can(c, x, y, s, a=1.0, spray=0.0, t=0.0, toward=(1, -0.3)):
+    c.save(); c.translate(x, y); c.scale(s, s)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-34, -200, 68, 200), 14, 14, fill("#c9b8e0", a)); c.drawRect(skia.Rect.MakeXYWH(-34, -150, 68, 70), fill("#7a5fa0", a))
+    text(c, "SPRAY", 0, -105, 18, "sansb", WHITE, a)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-22, -232, 44, 36), 10, 10, fill("#e8e1f0", a)); c.drawRect(skia.Rect.MakeXYWH(14, -226, 14, 10), fill("#55505e", a))
+    if spray > 0:
+        rnd = random.Random(5)
+        for i in range(70):
+            k = ((t * 1.6 + i / 70) % 1); sp = rnd.uniform(-.35, .35)
+            dx = toward[0] * k * 330 + sp * k * 180 * toward[1] * -1; dy = toward[1] * k * 330 + sp * k * 180
+            c.drawCircle(30 + dx, -221 + dy, 3 + k * 9, fill("#f4efe4", .22 * a * spray * (1 - k)))
+    c.restore()
+
+def building(c, cx, base, a=1.0, floors=8, under=2, w=760, cut=1.0, vault_glow=0.0, lit=.5, seed=2):
+    """Office block in cross-section: floors above ground, `under` levels below. Returns vault rect (x, y, w, h)."""
+    fh = 72; top = base - floors * fh; rnd = random.Random(seed)
+    c.drawRect(skia.Rect.MakeXYWH(cx - w / 2, top, w, floors * fh), fill("#1a1e2a", a))
+    for f_ in range(floors):
+        for k in range(9):
+            on = rnd.random() < lit
+            c.drawRect(skia.Rect.MakeXYWH(cx - w / 2 + 30 + k * (w - 60) / 9, top + f_ * fh + 18, (w - 60) / 9 - 22, fh - 34), fill(GOLD if on else "#0c0e14", a * (.5 if on else 1)))
+    c.drawRect(skia.Rect.MakeXYWH(cx - w / 2, top, w, floors * fh), stroke("#2e3446", 3, a))
+    c.drawRect(skia.Rect.MakeLTRB(cx - 1100, base, cx + 1100, base + 600), fill("#100c09", a))
+    c.drawLine(cx - 1100, base, cx + 1100, base, stroke("#5a4a36", 4, a))
+    vy = base + 30
+    for u in range(under):
+        yy = base + 20 + u * 110; q = clamp(cut * under - u)
+        c.drawRect(skia.Rect.MakeXYWH(cx - w / 2 + 40, yy, w - 80, 90), fill("#1b1712", a * q))
+        c.drawRect(skia.Rect.MakeXYWH(cx - w / 2 + 40, yy, w - 80, 90), stroke("#4a3d2c", 3, a * q))
+        text(c, f"LEVEL -{u + 1}", cx - w / 2 + 60, yy + 34, 20, "sansb", "#8c7d60", a * q, align="l", spacing=3)
+        vy = yy
+    vr = (cx - 180, vy + 8, 360, 74)
+    if vault_glow > 0:
+        c.drawRect(skia.Rect.MakeXYWH(*vr), fill(GOLD, .25 * a * vault_glow)); c.drawRect(skia.Rect.MakeXYWH(*vr), stroke(GOLD, 4, a * vault_glow))
+        c.drawCircle(vr[0] + vr[2] / 2, vr[1] + vr[3] / 2, 200, fill(GOLD, .12 * a * vault_glow, 60))
+        text(c, "THE VAULT", vr[0] + vr[2] / 2, vr[1] + 48, 30, "sansb", GOLD, a * vault_glow, spacing=5)
+    return vr
+
+def trash_bag(c, x, y, s, a=1.0, color="#16181e", rot=0):
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s)
+    P = skia.Path(); P.moveTo(-90, 0); P.cubicTo(-130, -60, -100, -170, -20, -180); P.lineTo(-14, -196); P.lineTo(14, -196); P.lineTo(20, -180)
+    P.cubicTo(100, -170, 130, -60, 90, 0); P.close()
+    c.drawOval(skia.Rect.MakeXYWH(-110, -16, 220, 30), fill("#000000", .5 * a, 10))
+    c.drawPath(P, fill(color, a)); c.drawPath(P, stroke("#3a3f4e", 3, a))
+    for k in (-1, 1): c.drawLine(k * 4, -196, k * 30, -222, stroke("#3a3f4e", 6, a))
+    c.drawLine(-40, -140, -55, -40, stroke("#ffffff", 3, .08 * a)); c.restore()
+
+def sandwich(c, x, y, w, rot=0, a=1.0, bite=True):
+    """Half-eaten salami sandwich (baguette style), side view. (x, y) centre."""
+    c.save(); c.translate(x, y); c.rotate(rot)
+    h = w * .32
+    Bt = skia.Path(); Bt.addRoundRect(skia.Rect.MakeXYWH(-w / 2, -h * .7, w, h * .62), h * .3, h * .3)
+    Bb = skia.Path(); Bb.addRoundRect(skia.Rect.MakeXYWH(-w / 2, h * .1, w, h * .45), h * .22, h * .22)
+    fil = skia.Path(); fil.addRect(skia.Rect.MakeXYWH(-w / 2 + 6, -h * .12, w - 12, h * .26))
+    if bite:
+        B = skia.Path()
+        for k in range(3): B.addCircle(w / 2 - w * .02, -h * .5 + k * h * .45, h * .42)
+        Bt = skia.Op(Bt, B, skia.PathOp.kDifference_PathOp); Bb = skia.Op(Bb, B, skia.PathOp.kDifference_PathOp); fil = skia.Op(fil, B, skia.PathOp.kDifference_PathOp)
+    c.drawPath(Bb, fill("#000000", .4 * a, 8))
+    c.drawPath(Bb, fill("#c98a45", a)); c.drawPath(fil, fill("#7a9a4a", a))
+    c.save(); c.clipPath(fil, True)
+    for k in range(7): c.drawCircle(-w / 2 + w * .1 + k * w * .14, 0, h * .2, fill("#b0323a", a)); c.drawCircle(-w / 2 + w * .1 + k * w * .14 - h * .05, -h * .04, h * .04, fill("#f0d2c8", a * .8))
+    c.restore()
+    sh = skia.GradientShader.MakeLinear(points=[(0, -h * .7), (0, -h * .08)], colors=[col("#e0a25a", a), col("#a8692c", a)])
+    c.drawPath(Bt, skia.Paint(Shader=sh, AntiAlias=True))
+    for k in range(4): c.drawLine(-w * .38 + k * w * .18, -h * .62, -w * .3 + k * w * .18, -h * .42, stroke("#f2cf94", max(2, w * .012), a * .8))
+    c.restore()
+
+def wine_bottle(c, x, y, s, rot=0, a=1.0):
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s)
+    P = skia.Path(); P.moveTo(-34, 0); P.lineTo(-34, -150); P.cubicTo(-34, -190, -12, -195, -12, -230); P.lineTo(-12, -280); P.lineTo(12, -280); P.lineTo(12, -230)
+    P.cubicTo(12, -195, 34, -190, 34, -150); P.lineTo(34, 0); P.close()
+    c.drawPath(P, fill("#1f3a2a", a)); c.drawPath(P, stroke("#5f8a6a", 2, a * .7))
+    c.drawRect(skia.Rect.MakeXYWH(-34, -120, 68, 70), fill(PAPER, a * .85)); c.drawRect(skia.Rect.MakeXYWH(-12, -280, 24, 30), fill("#6b1f24", a))
+    c.drawLine(-20, -170, -20, -20, stroke("#ffffff", 4, .15 * a)); c.restore()
+
+def videotape(c, x, y, w, rot=0, a=1.0, spill=0.0):
+    h = w * .56
+    c.save(); c.translate(x, y); c.rotate(rot)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2 + 5, -h / 2 + 8, w, h), 6, 6, fill("#000000", .5 * a, 8))
+    c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2, -h / 2, w, h), 6, 6, fill("#15161a", a))
+    c.drawRect(skia.Rect.MakeXYWH(-w * .32, -h * .32, w * .64, h * .3), fill("#2b2d33", a))
+    for k in (-1, 1): c.drawCircle(k * w * .2, -h * .17, h * .11, fill("#0a0a0c", a)); c.drawCircle(k * w * .2, -h * .17, h * .04, fill("#d9d9d9", a))
+    c.drawRect(skia.Rect.MakeXYWH(-w * .4, h * .1, w * .8, h * .22), fill(PAPER, a * .8))
+    if spill > 0:
+        P = skia.Path(); P.moveTo(-w * .1, h / 2); P.cubicTo(-w * .3, h * (1 + spill), w * .4, h * (.9 + spill), w * .2, h * (1.4 + spill * .8)); P.cubicTo(w * .1, h * 1.7, -w * .5, h * 1.6, -w * .45, h * 1.25)
+        c.drawPath(P, stroke("#3a2a20", max(2, w * .02), a))
+    c.restore()
+
+def id_card(c, x, y, w, rot=0, a=1.0, title="TENANT", name="", sub=""):
+    h = w * .62
+    card(c, x, y, w, h, rot=rot, a=a, color="#e9e4d6")
+    c.drawRect(skia.Rect.MakeXYWH(0, 0, w, h * .2), fill("#1d2333", a)); text(c, title, w / 2, h * .14, h * .1, "sansb", GOLD, a, spacing=4)
+    c.drawRect(skia.Rect.MakeXYWH(w * .06, h * .28, w * .28, h * .6), fill("#1b1e29", a))
+    c.save(); c.clipRect(skia.Rect.MakeXYWH(w * .06, h * .28, w * .28, h * .6)); figure(c, w * .2, h * .92, w / 900, a=a, hat=False, rim=GOLD); c.restore()
+    if name: text(c, name, w * .4, h * .48, h * .1, "typeb", INK, a, align="l")
+    if sub: text(c, sub, w * .4, h * .62, h * .075, "type", "#5a4d38", a, align="l")
+    c.drawRect(skia.Rect.MakeXYWH(w * .4, h * .72, w * .5, h * .1), fill("#c9b37a", a))
+    c.restore()
+
+def tree(c, x, y, s, a=1.0, color="#0a0d10", t=0.0, seed=0):
+    rnd = random.Random(seed); sway = math.sin(t * .8 + seed) * 4 * s
+    c.drawRect(skia.Rect.MakeXYWH(x - 8 * s, y - 170 * s, 16 * s, 170 * s), fill(color, a))
+    for k in range(6):
+        c.drawCircle(x + rnd.uniform(-70, 70) * s + sway, y - rnd.uniform(170, 300) * s, rnd.uniform(50, 85) * s, fill(color, a))
+
+def forest(ctx, t, a=1.0, road=True, dusk=True, cars=0.0):
+    c = ctx.c; W, H = ctx.W, ctx.H; g = H * .74
+    if dusk: c.drawRect(skia.Rect.MakeLTRB(0, 0, W, g), fill("#3a2a3a", .25 * a)); c.drawCircle(W * .78, g - 60, 260, fill("#ff9f5e", .14 * a, 90))
+    for i in range(16): tree(c, -60 + i * 135, g + 10, 1.0, a, "#141821", t, seed=i + 20)
+    for i in range(11): tree(c, -20 + i * 200, g + 40, 1.35, a, "#090b0f", t, seed=i)
+    c.drawRect(skia.Rect.MakeLTRB(0, g + 30, W, H), fill("#07090c", a))
+    if road:
+        c.drawRect(skia.Rect.MakeLTRB(0, H * .86, W, H), fill("#16181e", a))
+        for i in range(12): c.drawRect(skia.Rect.MakeXYWH((i * 190 - t * 120) % (W + 200) - 100, H * .925, 90, 8), fill("#d8cdb4", .6 * a))
+        if cars > 0:
+            for k in range(3):
+                xx = (k * 760 + t * 420) % (W + 600) - 300
+                c.drawCircle(xx, H * .9, 60, fill("#ffe2a0", .25 * a * cars, 20)); c.drawCircle(xx, H * .9, 8, fill("#fff3d0", a * cars))
+
+def car(c, x, y, s, a=1.0, lights=1.0, color="#0d0f14"):
+    c.save(); c.translate(x, y); c.scale(s, s)
+    P = skia.Path(); P.moveTo(-200, 0); P.lineTo(-200, -50); P.lineTo(-120, -60); P.lineTo(-70, -115); P.lineTo(80, -115); P.lineTo(130, -62); P.lineTo(200, -52); P.lineTo(205, 0); P.close()
+    c.drawPath(P, fill(color, a)); c.drawPath(P, stroke("#3a4152", 3, a))
+    for k in (-120, 120): c.drawCircle(k, 0, 34, fill("#050608", a)); c.drawCircle(k, 0, 14, fill("#3a4152", a))
+    c.drawRect(skia.Rect.MakeXYWH(-60, -105, 60, 40), fill("#2a3142", a)); c.drawRect(skia.Rect.MakeXYWH(10, -105, 60, 40), fill("#2a3142", a))
+    if lights > 0:
+        c.drawCircle(198, -36, 40, fill("#ffe2a0", .35 * a * lights, 18)); c.drawCircle(198, -36, 9, fill("#fff3d0", a * lights))
+        c.drawCircle(-198, -36, 7, fill("#ff3b30", a * lights))
+    c.restore()
+
+def person(c, x, y, h, a=1.0, color="#07080b", rim=None, step=0.0, crouch=0.0, arms=0.0):
+    """Full-body silhouette; (x, y) = feet, h = height. step 0..1 walking phase, crouch 0..1."""
+    s = h / 300; c.save(); c.translate(x, y); c.scale(s, s)
+    hip = -130 + crouch * 40; sw = math.sin(step * 2 * math.pi) * 22
+    st = stroke(color, 30, a)
+    c.drawLine(0, hip, -16 + sw, 0, st); c.drawLine(0, hip, 16 - sw, 0, st)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-30, hip - 120 + crouch * 10, 60, 135), 24, 24, fill(color, a))
+    c.drawLine(-20, hip - 100, -40 + arms * 60, hip - 30 - arms * 70, stroke(color, 22, a)); c.drawLine(20, hip - 100, 40 + arms * 30, hip - 30 - arms * 80, stroke(color, 22, a))
+    c.drawCircle(0, hip - 150 + crouch * 10, 30, fill(color, a))
+    if rim: c.drawCircle(0, hip - 150 + crouch * 10, 30, stroke(rim, 3, a * .8))
+    c.restore()
