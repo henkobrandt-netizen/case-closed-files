@@ -821,10 +821,204 @@ def person(c, x, y, h, a=1.0, color="#07080b", rim=None, step=0.0, crouch=0.0, a
     """Full-body silhouette; (x, y) = feet, h = height. step 0..1 walking phase, crouch 0..1."""
     s = h / 300; c.save(); c.translate(x, y); c.scale(s, s)
     hip = -130 + crouch * 40; sw = math.sin(step * 2 * math.pi) * 22
-    st = stroke(color, 30, a)
-    c.drawLine(0, hip, -16 + sw, 0, st); c.drawLine(0, hip, 16 - sw, 0, st)
-    c.drawRoundRect(skia.Rect.MakeXYWH(-30, hip - 120 + crouch * 10, 60, 135), 24, 24, fill(color, a))
-    c.drawLine(-20, hip - 100, -40 + arms * 60, hip - 30 - arms * 70, stroke(color, 22, a)); c.drawLine(20, hip - 100, 40 + arms * 30, hip - 30 - arms * 80, stroke(color, 22, a))
-    c.drawCircle(0, hip - 150 + crouch * 10, 30, fill(color, a))
+    for colr, al, bl, k in (((rim, a * .45, 10, 6),) if rim else ()) + ((color, a, 0, 0),):
+        st = stroke(colr, 30 + k, al, blur=bl)
+        c.drawLine(0, hip, -16 + sw, 0, st); c.drawLine(0, hip, 16 - sw, 0, st)
+        c.drawRoundRect(skia.Rect.MakeXYWH(-30 - k / 2, hip - 120 + crouch * 10 - k / 2, 60 + k, 135 + k), 24, 24, fill(colr, al, bl))
+        c.drawLine(-20, hip - 100, -40 + arms * 60, hip - 30 - arms * 70, stroke(colr, 22 + k, al, blur=bl)); c.drawLine(20, hip - 100, 40 + arms * 30, hip - 30 - arms * 80, stroke(colr, 22 + k, al, blur=bl))
+        c.drawCircle(0, hip - 150 + crouch * 10, 30 + k / 2, fill(colr, al, bl))
     if rim: c.drawCircle(0, hip - 150 + crouch * 10, 30, stroke(rim, 3, a * .8))
+    c.restore()
+
+
+# ======================= added for 005 (Mona Lisa), reusable =======================
+SMOCK = "#d9d2c2"; IRON = "#5b5f69"; WOOD = "#6b4a2b"
+
+def portrait(c, x, y, w, a=1.0, frame=False, glow=0.0, label=None, smile=1.0, gone=0.0):
+    """An original, stylised illustration of a seated woman before a hazy landscape (evokes a
+    Renaissance portrait; not a copy). Bare wooden panel unless frame=True. (x, y) = centre, h = w * 1.45."""
+    if a <= 0: return
+    h = w * 1.45; fw = w * .08 if frame else 0
+    if glow: c.drawRect(skia.Rect.MakeXYWH(x - w / 2 - 40, y - h / 2 - 40, w + 80, h + 80), fill("#ffcf7a", .2 * glow * a, 70))
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + 10, y - h / 2 + 16, w, h), fill("#000000", .6 * a, 22))
+    if frame:
+        sh = skia.GradientShader.MakeLinear(points=[(x - w / 2, y - h / 2), (x + w / 2, y + h / 2)], colors=[col("#e7c46a", a), col("#8a6326", a), col("#d9b25a", a)])
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), skia.Paint(Shader=sh, AntiAlias=True))
+    else:
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), fill("#6b4f30", a))
+    ix, iy, iw, ih = x - w / 2 + fw + w * .02, y - h / 2 + fw + w * .02, w - 2 * fw - w * .04, h - 2 * fw - w * .04
+    c.save(); c.clipRect(skia.Rect.MakeXYWH(ix, iy, iw, ih))
+    sh = skia.GradientShader.MakeLinear(points=[(0, iy), (0, iy + ih)], colors=[col("#9fb0a0", a), col("#6f7f68", a), col("#3f4632", a)], positions=[0, .45, 1])
+    c.drawRect(skia.Rect.MakeXYWH(ix, iy, iw, ih), skia.Paint(Shader=sh))
+    for k, (yy, cc) in enumerate(((.3, "#a9bcb8"), (.38, "#7f948a"))):     # far hills
+        P = skia.Path(); P.moveTo(ix, iy + ih * yy)
+        for j in range(9): P.lineTo(ix + iw * j / 8, iy + ih * (yy - .05 * math.sin(j * 1.7 + k)))
+        P.lineTo(ix + iw, iy + ih); P.lineTo(ix, iy + ih); P.close(); c.drawPath(P, fill(cc, .7 * a))
+    P = skia.Path(); P.moveTo(ix + iw * .08, iy + ih * .55); P.cubicTo(ix + iw * .25, iy + ih * .48, ix + iw * .05, iy + ih * .42, ix + iw * .2, iy + ih * .36)
+    c.drawPath(P, stroke("#d8c79a", iw * .02, .6 * a))                          # winding path
+    P = skia.Path(); P.moveTo(ix + iw * .86, iy + ih * .5); P.cubicTo(ix + iw * .75, iy + ih * .44, ix + iw * .95, iy + ih * .4, ix + iw * .82, iy + ih * .33)
+    c.drawPath(P, stroke("#b9c6b4", iw * .015, .5 * a))                         # river
+    q = a * (1 - gone)
+    if q > 0:
+        fx = ix + iw * .5; P = skia.Path()                                       # dress / body
+        P.moveTo(ix + iw * .02, iy + ih); P.cubicTo(ix + iw * .05, iy + ih * .62, ix + iw * .25, iy + ih * .5, fx - iw * .1, iy + ih * .44)
+        P.lineTo(fx + iw * .1, iy + ih * .44); P.cubicTo(ix + iw * .75, iy + ih * .5, ix + iw * .95, iy + ih * .62, ix + iw * .98, iy + ih)
+        P.close(); c.drawPath(P, fill("#2b2416", q))
+        c.drawOval(skia.Rect.MakeXYWH(fx - iw * .12, iy + ih * .44, iw * .24, ih * .1), fill("#b88f5a", q * .9))   # neckline
+        c.drawOval(skia.Rect.MakeXYWH(fx - iw * .21, iy + ih * .14, iw * .42, ih * .36), fill("#1d1810", q))       # hair + veil
+        c.drawOval(skia.Rect.MakeXYWH(fx - iw * .13, iy + ih * .18, iw * .26, ih * .26), fill("#c79d62", q))       # face
+        c.drawOval(skia.Rect.MakeXYWH(fx - iw * .09, iy + ih * .2, iw * .12, ih * .1), fill("#e2c28a", q * .55, iw * .03))
+        for ex in (-.055, .055): c.drawOval(skia.Rect.MakeXYWH(fx + iw * ex - iw * .025, iy + ih * .275, iw * .05, ih * .016), fill("#4a3520", q * .8))
+        if smile > 0:
+            P = skia.Path(); P.moveTo(fx - iw * .045, iy + ih * .365); P.quadTo(fx, iy + ih * (.365 + .012 * smile), fx + iw * .05, iy + ih * .358)
+            c.drawPath(P, stroke("#6a4226", iw * .012, q))
+        for hx, hy in ((.42, .86), (.56, .83)):                                  # folded hands
+            c.drawOval(skia.Rect.MakeXYWH(ix + iw * hx - iw * .1, iy + ih * hy - ih * .035, iw * .2, ih * .07), fill("#c79d62", q))
+    c.drawRect(skia.Rect.MakeXYWH(ix, iy, iw, ih), fill("#a8781e", .14 * a))     # old varnish
+    c.restore()
+    if label: label_plate(c, label, x, y + h / 2 + 46, a)
+
+def hooks(c, x, y, w, h, a=1.0, patch=True):
+    """The bare spot on a gallery wall where a painting hung: a paler rectangle and four iron hooks. (x, y) = centre."""
+    if a <= 0: return
+    if patch: c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), fill("#6a5446", .35 * a))
+    for hx, hy in ((-.3, -.5), (.3, -.5), (-.5, .2), (.5, .2)):
+        px, py = x + w * hx, y + h * hy
+        k = max(1.0, w / 380)
+        c.drawCircle(px, py, 9 * k, fill("#2a2b30", a)); c.drawLine(px, py, px, py + 26 * k, stroke(IRON, 9 * k, a))
+        c.drawLine(px, py + 26 * k, px + (10 if hx <= 0 else -10) * k, py + 20 * k, stroke(IRON, 8 * k, a))
+
+def gallery_wall(ctx, a=1.0, gap=None, seed=5, hang=None):
+    """Salon-style gallery wall crowded with (invented) paintings; gap = (x, y, w, h) left empty for hooks()."""
+    c = ctx.c; W, H = ctx.W, ctx.H
+    c.drawRect(skia.Rect.MakeLTRB(0, 0, W, H * .84), fill("#3a2420", a))
+    c.drawRect(skia.Rect.MakeLTRB(0, H * .84, W, H), fill("#1a1310", a))
+    c.drawRect(skia.Rect.MakeLTRB(0, H * .82, W, H * .845), fill("#5a3a22", a))
+    for i in range(0, int(W), 160): c.drawLine(i, H * .845, i - 120, H, stroke("#0e0a08", 3, a * .6))
+    rnd = random.Random(seed)
+    spots = [(.1, .26, 230, 300), (.27, .2, 300, 220), (.12, .6, 260, 200), (.88, .25, 260, 330), (.72, .18, 260, 190), (.9, .62, 230, 190), (.28, .58, 180, 230), (.72, .58, 190, 240)]
+    for k, (fx, fy, pw, ph) in enumerate(spots):
+        px, py = W * fx, H * fy
+        if gap and abs(px - gap[0]) < gap[2] / 2 + pw / 2 and abs(py - gap[1]) < gap[3] / 2 + ph / 2: continue
+        painting(c, px, py, pw, ph, a=a * .85, seed=seed + k)
+    if gap: hooks(c, gap[0], gap[1], gap[2], gap[3], a)
+    if hang: hang(c)
+
+def glass_case(c, x, y, w, h, a=1.0, t=0.0, open_=0.0):
+    """Protective glass box with a wooden back; (x, y) = centre. open_ slides the glass front up and away."""
+    if a <= 0: return
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2 - 8, y - h / 2 - 8, w + 16, h + 16), stroke("#3a2a1a", 14, a, cap=False))
+    oy = -h * 1.2 * eo(open_); oa = a * (1 - seg(open_, .12, .4))
+    if oa > 0:
+        c.save(); c.translate(0, oy)
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), fill("#cfe8ff", .08 * oa))
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h), stroke("#cfe8ff", 4, .6 * oa, cap=False))
+        for k in range(3):
+            sx = x - w / 2 + ((t * 40 + k * w * .4) % (w * 1.4)) - w * .2
+            P = skia.Path(); P.moveTo(sx, y - h / 2); P.lineTo(sx + w * .12, y - h / 2); P.lineTo(sx - w * .1, y + h / 2); P.lineTo(sx - w * .22, y + h / 2); P.close()
+            c.save(); c.clipRect(skia.Rect.MakeXYWH(x - w / 2, y - h / 2, w, h)); c.drawPath(P, fill("#ffffff", .07 * oa)); c.restore()
+        for bx, by in ((-1, -1), (1, -1), (-1, 1), (1, 1)): c.drawCircle(x + bx * (w / 2 - 12), y + by * (h / 2 - 12), 6, fill(GOLD, oa))
+        c.restore()
+
+def louvre(ctx, a=1.0, base=None, lit=.3, w=1700):
+    """The Louvre palace in silhouette: long wings, a domed central pavilion, rows of tall windows."""
+    c = ctx.c; cx = ctx.cx; H = ctx.H; base = base or H * .78; x0 = cx - w / 2; rnd = random.Random(11)
+    c.drawRect(skia.Rect.MakeXYWH(x0, base - 230, w, 230), fill("#141823", a))
+    mans = skia.Path(); mans.moveTo(x0, base - 230); mans.lineTo(x0 + 30, base - 290); mans.lineTo(x0 + w - 30, base - 290); mans.lineTo(x0 + w, base - 230); mans.close()
+    c.drawPath(mans, fill("#10131c", a))
+    for px in (x0 + 40, cx, x0 + w - 40):
+        pw = 260 if px == cx else 180; ph = 420 if px == cx else 340
+        c.drawRect(skia.Rect.MakeXYWH(px - pw / 2, base - ph, pw, ph), fill("#171b28", a))
+        D = skia.Path(); D.moveTo(px - pw / 2, base - ph); D.cubicTo(px - pw / 2, base - ph - 130, px + pw / 2, base - ph - 130, px + pw / 2, base - ph); D.close()
+        c.drawPath(D, fill("#10131c", a))
+    for k in range(int(w / 68)):
+        wx = x0 + 34 + k * 68
+        for row in (0, 1):
+            wy = base - 200 + row * 100
+            c.drawRoundRect(skia.Rect.MakeXYWH(wx, wy, 24, 64), 12, 12, fill(GOLD if rnd.random() < lit else "#0a0c12", a * (.6 if rnd.random() < lit else 1)))
+    c.drawRect(skia.Rect.MakeLTRB(0, base, ctx.W, H), fill("#0b0d12", a))
+
+def smock_man(c, x, y, h, a=1.0, step=0.0, carry=0.0, rim=GOLD, bundle="#e8e2d2"):
+    """Workman in a white smock (silhouette); carry>0 shows a wrapped flat bundle under his arm."""
+    person(c, x, y, h, a=a, rim=rim, step=step)
+    s = h / 300; c.save(); c.translate(x, y); c.scale(s, s)
+    P = skia.Path(); P.moveTo(-32, -250); P.lineTo(32, -250); P.lineTo(44, -110); P.lineTo(-44, -110); P.close()
+    c.drawPath(P, fill(SMOCK, a * .92))
+    if carry > 0:
+        c.save(); c.rotate(-8); c.drawRect(skia.Rect.MakeXYWH(16, -215, 70, 104), fill(bundle, a * carry)); c.drawRect(skia.Rect.MakeXYWH(16, -215, 70, 104), stroke("#9c9482", 3, a * carry, cap=False)); c.restore()
+    c.restore()
+
+def door(c, x, y, w, h, a=1.0, open_=0.0, knob=1.0, lit=0.0):
+    """Plain service door; (x, y) = bottom centre. open_ swings it to show daylight. knob<1 = knob coming apart."""
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2 - 16, y - h - 16, w + 32, h + 16), fill("#2b2218", a))
+    if open_ > 0 or lit > 0:
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h, w, h), fill("#f3dfae", a * max(open_, lit * .2)))
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2 - 60, y - h - 60, w + 120, h + 60), fill("#ffe2a0", .14 * a * open_, 50))
+    dw = w * (1 - .82 * eo(open_))
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h, dw, h), fill("#4a3826", a))
+    for k in range(2): c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + dw * .12, y - h + h * (.08 + k * .47), dw * .76, h * .38), stroke("#2b2218", 4, a, cap=False))
+    if open_ < .3:
+        kx, ky = x - w / 2 + dw * .86, y - h * .48
+        c.drawCircle(kx, ky, 14, fill("#c9a24a", a * knob))
+        if knob < 1:
+            for i in range(3):
+                q = 1 - knob; c.drawRect(skia.Rect.MakeXYWH(kx - 30 - i * 26 * q, ky + 30 + i * 40 * q, 14, 6), fill("#9a9a9a", a * q))
+
+def trunk(c, x, y, w, a=1.0, lid=0.0, cut=0.0, inside=None):
+    """Wooden travelling trunk; (x, y) = bottom centre. cut 0..1 reveals a false bottom with inside(c, x, y, w, h) drawn in it."""
+    h = w * .55
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + 12, y - h + 16, w, h), fill("#000000", .5 * a, 18))
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h, w, h), fill(WOOD, a))
+    for k in (.18, .82): c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + w * k - 14, y - h, 28, h), fill("#3a2614", a))
+    c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - h, w, 10), fill("#3a2614", a)); c.drawRect(skia.Rect.MakeXYWH(x - w / 2, y - 12, w, 12), fill("#3a2614", a))
+    if cut > 0:
+        fb = y - h * .3
+        c.save(); c.clipRect(skia.Rect.MakeXYWH(x - w / 2 + 20, y - h + 20, (w - 40) * eo(cut), h - 32))
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + 20, y - h + 20, w - 40, h - 32), fill("#1f150c", a))
+        for k in range(3): c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + 40 + k * 120, y - h + 40 + k * 14, 140, 40), fill("#5a5146", a * .8))
+        c.drawRect(skia.Rect.MakeXYWH(x - w / 2 + 20, fb - 8, w - 40, 12), fill("#8a6a44", a))
+        text(c, "FALSE BOTTOM", x + w / 2 - 40, fb - 20, w * .035, "sansb", GOLD, a, align="r", spacing=3)
+        if inside: inside(c, x, fb + 4, w - 60, y - fb - 20)
+        c.restore()
+    lh = h * .3 * (1 - .6 * eo(lid)); ly = y - h - lh - h * .45 * eo(lid)
+    c.drawRect(skia.Rect.MakeXYWH(x - w * .51, ly, w * 1.02, lh), fill("#5a3c22", a)); c.drawRect(skia.Rect.MakeXYWH(x - w * .51, ly, w * 1.02, lh), stroke("#3a2614", 5, a, cap=False))
+    c.drawRect(skia.Rect.MakeXYWH(x - 20, y - h - 10, 40, 34), fill(GOLD, a * (1 - eo(lid))))
+
+def thumbprint(c, x, y, r, a=1.0, p=1.0, color=GOLD):
+    """Fingerprint whorl drawn as concentric broken loops."""
+    for k in range(9):
+        rr = r * (k + 1) / 9; q = clamp(p * 9 - k)
+        if q <= 0: break
+        P = skia.Path(); P.addArc(skia.Rect.MakeXYWH(x - rr * .8, y - rr, rr * 1.6, rr * 2), 200 + k * 23, 300 * q)
+        c.drawPath(P, stroke(color, max(2, r * .045), a))
+
+def crowd(c, cx, y, n=9, s=.8, a=1.0, spread=190, rim="#2b3044", seed=3, t=0.0):
+    rnd = random.Random(seed)
+    for i in range(n):
+        x = cx + (i - (n - 1) / 2) * spread + rnd.uniform(-30, 30); ss = s * rnd.uniform(.85, 1.1)
+        figure(c, x, y + rnd.uniform(0, 30) + math.sin(t * 1.5 + i) * 3, ss, a=a, hat=rnd.random() < .6, rim=rim)
+
+def train(c, x, y, s=1.0, a=1.0, t=0.0, cars=3):
+    """Steam train in silhouette, heading right; (x, y) = rail level at the engine's front."""
+    c.save(); c.translate(x, y); c.scale(s, s)
+    for k in range(cars):
+        cx0 = -560 - k * 330
+        c.drawRect(skia.Rect.MakeXYWH(cx0, -170, 310, 140), fill("#0d0f15", a))
+        for j in range(5): c.drawRect(skia.Rect.MakeXYWH(cx0 + 20 + j * 58, -145, 36, 44), fill(GOLD, a * .55))
+        for wx in (40, 270): c.drawCircle(cx0 + wx, -18, 22, fill("#0d0f15", a))
+    c.drawRect(skia.Rect.MakeXYWH(-520, -210, 150, 180), fill("#0d0f15", a))
+    c.drawRoundRect(skia.Rect.MakeXYWH(-380, -150, 330, 120), 50, 50, fill("#0d0f15", a))
+    c.drawRect(skia.Rect.MakeXYWH(-120, -230, 50, 90), fill("#0d0f15", a))
+    for wx in (-470, -340, -200): c.drawCircle(wx, -26, 34, fill("#0d0f15", a)); c.drawCircle(wx, -26, 34, stroke("#3a4152", 3, a))
+    for j in range(6):
+        age = (t * .5 + j / 6) % 1
+        c.drawCircle(-95 - age * 520, -260 - age * 120, 24 + age * 60, fill("#8d93a8", .18 * a * (1 - age), 12))
+    c.drawCircle(-40, -110, 30, fill("#ffe2a0", .35 * a, 14))
+    c.restore()
+
+def wrench(c, x, y, s, rot=0, a=1.0, color="#9aa3b5"):
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s)
+    c.drawRoundRect(skia.Rect.MakeXYWH(-8, 0, 16, 110), 6, 6, fill(color, a))
+    P = skia.Path(); P.addCircle(0, -6, 22); Q = skia.Path(); Q.addRect(skia.Rect.MakeXYWH(-8, -34, 16, 26))
+    c.drawPath(skia.Op(P, Q, skia.PathOp.kDifference_PathOp), fill(color, a))
     c.restore()
