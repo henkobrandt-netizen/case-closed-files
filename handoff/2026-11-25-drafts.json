@@ -1,0 +1,25 @@
+{
+ "youtube": [
+  {
+   "postId": "2308fa1a-e01c-43df-9e20-07c995ff8420",
+   "title": "How One Man Stole the Mona Lisa With a Plumber's Help",
+   "format": "long",
+   "publishAt": "2026-11-26T17:00:00+02:00",
+   "platforms": [
+    "YOUTUBE"
+   ],
+   "video_url": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/005-mona-lisa/long.mp4"
+  },
+  {
+   "postId": "3d00f064-b758-4a64-b1c2-85365bf2b12f",
+   "title": "He Walked Out With the Mona Lisa. A Plumber Held the Door #shorts",
+   "format": "short",
+   "publishAt": "2026-11-27T17:00:00+02:00",
+   "platforms": [
+    "YOUTUBE",
+    "INSTAGRAM"
+   ],
+   "video_url": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/005-mona-lisa/short_a.mp4"
+  }
+ ]
+}
