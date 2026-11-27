@@ -71,6 +71,8 @@ Learned from a 3.8x breakout con documentary (Lume, "$7 Million in Fake Money...
 - Label invented documents "RECONSTRUCTION" or "ILLUSTRATION".
 - Add `HITS` / `SHORT_HITS` for stamp thuds, `THUMB_WORDS` + `thumbnail()`.
 - Check: `python3 pipeline/build.py episodes/<id> stills` then look at every contact sheet (long and short_a).
+  Better: `python3 pipeline/beats.py episodes/<id> long 0.8` (and 0.96, and `short_a 0.85`) renders one still per
+  narration line, so no beat is skipped.
   Fix overlaps, text off screen, empty frames, anything unreadable. Repeat until clean.
 
 ## 5. Build
