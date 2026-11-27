@@ -5,7 +5,7 @@
 - [x] Gregor MacGregor: the man who sold a country that didn't exist (Poyais) (003)
 - [x] The Antwerp Diamond Heist, 2003: the "unbreakable" vault (004)
 - [x] Vincenzo Peruggia: the man who stole the Mona Lisa (1911) (005)
-- [ ] Charles Ponzi: the scheme with his name on it
+- [x] Charles Ponzi: the scheme with his name on it (006)
 - [ ] Thérèse Humbert and the empty safe
 - [ ] The Hitler Diaries hoax (1983)
 - [ ] The Banco Central tunnel heist, Brazil (2005)

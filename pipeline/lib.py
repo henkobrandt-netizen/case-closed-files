@@ -1022,3 +1022,114 @@ def wrench(c, x, y, s, rot=0, a=1.0, color="#9aa3b5"):
     P = skia.Path(); P.addCircle(0, -6, 22); Q = skia.Path(); Q.addRect(skia.Rect.MakeXYWH(-8, -34, 16, 26))
     c.drawPath(skia.Op(P, Q, skia.PathOp.kDifference_PathOp), fill(color, a))
     c.restore()
+
+
+# ======================= added for 006 (Ponzi), reusable =======================
+STRAW = "#d8c48a"; BRICK = "#3a2620"; BRICK2 = "#2c1c18"
+
+def boater(c, x, y, s, a=1.0, rim=GOLD, color="#07080b", cane=0.0, smile=0.0):
+    """Bust silhouette in a flat straw boater hat (Ponzi's look). (x, y) = bottom centre, height ~300*s.
+    cane 0..1 shows a gold-handled cane; smile draws a faint gold smile line."""
+    figure(c, x, y, s, color=color, a=a, hat=False, rim=rim)
+    c.save(); c.translate(x, y); c.scale(s, s)
+    c.drawOval(skia.Rect.MakeLTRB(-92, -262, 92, -236), fill(STRAW, a))
+    c.drawRect(skia.Rect.MakeLTRB(-54, -300, 54, -250), fill(STRAW, a))
+    c.drawOval(skia.Rect.MakeLTRB(-54, -310, 54, -290), fill("#e6d6a2", a))
+    c.drawRect(skia.Rect.MakeLTRB(-54, -268, 54, -254), fill("#1d2333", a))
+    for k in range(-40, 50, 14): c.drawLine(k, -296, k + 4, -270, stroke("#b9a46a", 1.5, a * .6))
+    if smile > 0:
+        P = skia.Path(); P.moveTo(-18, -198); P.quadTo(0, -186, 18, -198)
+        c.drawPath(P, stroke(GOLD, 3, a * smile))
+    if cane > 0:
+        c.drawLine(120, 0, 160, -170, stroke("#2a1c12", 8, a * cane))
+        c.drawCircle(162, -178, 12, fill(GOLD, a * cane))
+    c.restore()
+
+def reply_coupon(c, x, y, w, rot=0, a=1.0, country="ESPAÑA", glow=0.0, lab=True):
+    """An international reply coupon (generic illustration, not a copy of a real design). (x, y) = centre."""
+    if a <= 0: return
+    h = w * .62
+    c.save(); c.translate(x, y); c.rotate(rot)
+    if glow: c.drawRoundRect(skia.Rect.MakeXYWH(-w / 2 - 30, -h / 2 - 30, w + 60, h + 60), 30, 30, fill("#ffe2a0", .25 * glow * a, 40))
+    c.drawRect(skia.Rect.MakeXYWH(-w / 2 + 6, -h / 2 + 10, w, h), fill("#000000", .45 * a, 10))
+    c.drawRect(skia.Rect.MakeXYWH(-w / 2, -h / 2, w, h), fill("#dfe6d2", a))
+    r = max(2, w * .012)
+    for k in range(int(w / (r * 3.2))):   # perforated edge
+        px = -w / 2 + r * 1.6 + k * r * 3.2
+        c.drawCircle(px, -h / 2, r, fill(INK, a)); c.drawCircle(px, h / 2, r, fill(INK, a))
+    c.drawRect(skia.Rect.MakeXYWH(-w / 2 + w * .04, -h / 2 + w * .04, w * .92, h - w * .08), stroke("#4f6b5a", max(1, w * .008), a))
+    c.drawRect(skia.Rect.MakeXYWH(-w / 2 + w * .06, -h / 2 + w * .06, w * .88, h - w * .12), stroke("#4f6b5a", max(1, w * .003), a))
+    text(c, "UNION POSTALE UNIVERSELLE", 0, -h * .27, w * .044, "serifb", "#2f4a3c", a, spacing=w * .006)
+    text(c, "COUPON-RÉPONSE", 0, -h * .08, w * .095, "disp", "#22382c", a)
+    text(c, "INTERNATIONAL", 0, h * .08, w * .06, "serifb", "#2f4a3c", a, spacing=w * .01)
+    c.drawCircle(-w * .33, h * .26, w * .07, stroke("#4f6b5a", max(1, w * .006), a))
+    text(c, "UPU", -w * .33, h * .275, w * .04, "sansb", "#4f6b5a", a)
+    text(c, country, w * .28, h * .3, w * .05, "sansb", "#4f6b5a", a, spacing=w * .006)
+    if lab: text(c, "ILLUSTRATION", 0, h / 2 + w * .07, max(10, w * .028), "sansb", "#8c7d60", a, spacing=3)
+    c.restore()
+
+def promissory(c, x, y, w, rot=0, a=1.0, amount="$150", days="45", lab=True):
+    """Securities Exchange Co. style note (reconstruction). (x, y) = centre."""
+    h = w * .5
+    card(c, x, y, w, h, rot=rot, a=a, color="#efe6cf")
+    c.drawRect(skia.Rect.MakeXYWH(w * .03, h * .05, w * .94, h * .9), stroke("#7a6a46", max(1, w * .006), a, cap=False))
+    text(c, "SECURITIES EXCHANGE CO.", w / 2, h * .2, w * .05, "serifb", "#2a2216", a, spacing=w * .004)
+    text(c, f"In {days} days, pay to bearer", w / 2, h * .42, w * .045, "serif", "#3b3324", a)
+    text(c, amount, w / 2, h * .68, w * .12, "disp", "#2a2216", a)
+    c.drawLine(w * .6, h * .84, w * .9, h * .84, stroke(INK, 1.5, a, cap=False))
+    if lab: text(c, "RECONSTRUCTION", w * .08, h * .9, max(10, w * .022), "sansb", "#8c7d60", a, align="l", spacing=3)
+    c.restore()
+
+def storefront(c, cx, base, w=900, h=640, sign="", a=1.0, lit=.6, door_open=0.0, sub=""):
+    """Brick office/shop front with a sign board, two windows and a door. (cx, base) = bottom centre."""
+    x0 = cx - w / 2
+    c.drawRect(skia.Rect.MakeXYWH(x0, base - h, w, h), fill(BRICK, a))
+    for r in range(int(h / 28)):
+        yy = base - h + r * 28; off = 0 if r % 2 else 30
+        c.drawLine(x0, yy, x0 + w, yy, stroke(BRICK2, 2, a, cap=False))
+        for k in range(int(w / 60) + 1):
+            xx = x0 + off + k * 60
+            if xx < x0 + w: c.drawLine(xx, yy, xx, yy + 28, stroke(BRICK2, 2, a, cap=False))
+    c.drawRect(skia.Rect.MakeXYWH(x0 + w * .06, base - h + 40, w * .88, 90), fill("#141822", a))
+    c.drawRect(skia.Rect.MakeXYWH(x0 + w * .06, base - h + 40, w * .88, 90), stroke(GOLD, 3, a, cap=False))
+    if sign:
+        sz = 50
+        while tw(sign, "serifb", sz) > w * .8: sz -= 2
+        text(c, sign, cx, base - h + 102, sz, "serifb", GOLD, a)
+    for k in (-1, 1):
+        wx = cx + k * w * .3
+        c.drawRect(skia.Rect.MakeXYWH(wx - w * .12, base - h * .62, w * .24, h * .32), fill("#ffcf7a", a * lit))
+        c.drawRect(skia.Rect.MakeXYWH(wx - w * .12, base - h * .62, w * .24, h * .32), stroke("#1a1410", 10, a, cap=False))
+        c.drawLine(wx, base - h * .62, wx, base - h * .3, stroke("#1a1410", 6, a))
+    dw = w * .2; dh = h * .5
+    c.drawRect(skia.Rect.MakeXYWH(cx - dw / 2, base - dh, dw, dh), fill("#ffcf7a", a * lit * door_open))
+    c.save(); c.translate(cx - dw / 2, base - dh); c.scale(1 - .8 * door_open, 1)
+    c.drawRect(skia.Rect.MakeXYWH(0, 0, dw, dh), fill("#2a1c14", a)); c.drawRect(skia.Rect.MakeXYWH(dw * .15, dh * .08, dw * .7, dh * .4), fill("#c9b37a", a * .35))
+    c.restore()
+    if sub: text(c, sub, cx, base - h + 168, 22, "sansb", "#e9d29a", a, spacing=3)
+
+def queue(c, x0, x1, y, n, h=260, a=1.0, t=0.0, rim="#2b3044", seed=7, move=0.0, papers=0.0):
+    """A line of standing people from x0 to x1 at feet height y; optional small white papers in hand."""
+    rnd = random.Random(seed)
+    for i in range(n):
+        f = i / max(1, n - 1); x = lerp(x0, x1, f) + rnd.uniform(-12, 12) + move
+        hh = h * rnd.uniform(.85, 1.08); sc = 1 - .35 * f if x1 < x0 else 1
+        person(c, x, y - (1 - sc) * 60, hh * sc, a=a, rim=rim, step=(t * .3 + rnd.random()) if move else 0)
+        if papers > 0: c.drawRect(skia.Rect.MakeXYWH(x + 18 * sc, y - (1 - sc) * 60 - hh * sc * .52, 22 * sc, 30 * sc), fill(PAPER, a * papers))
+
+def mugshot(c, x, y, w, rot=0, a=1.0, plate="", moustache=0.0, rim=GOLD):
+    """Police photo card with a numbered plate (illustration). (x, y) = centre, h = w * 1.25."""
+    h = w * 1.25
+    card(c, x, y, w, h, rot=rot, a=a, color="#e9e4d6")
+    c.drawRect(skia.Rect.MakeXYWH(w * .08, w * .08, w * .84, h * .68), fill("#2a2d36", a))
+    c.save(); c.clipRect(skia.Rect.MakeXYWH(w * .08, w * .08, w * .84, h * .68))
+    for k in range(6): c.drawLine(w * .08, w * .14 + k * h * .11, w * .92, w * .14 + k * h * .11, stroke("#3c404c", 2, a, cap=False))
+    figure(c, w / 2, w * .08 + h * .72, w / 470, a=a, hat=False, rim=rim)
+    if moustache > 0:
+        P = skia.Path(); mx, my = w / 2, w * .08 + h * .72 - 205 * w / 470
+        P.moveTo(mx - 26 * w / 470, my); P.quadTo(mx, my - 14 * w / 470, mx + 26 * w / 470, my); P.quadTo(mx, my - 4 * w / 470, mx - 26 * w / 470, my)
+        c.drawPath(P, stroke(GOLD, 5 * w / 470, a * moustache))
+    c.restore()
+    if plate: text(c, plate, w / 2, h * .86, w * .08, "typeb", INK, a)
+    text(c, "ILLUSTRATION", w / 2, h * .95, max(10, w * .03), "sansb", "#8c7d60", a, spacing=3)
+    c.restore()

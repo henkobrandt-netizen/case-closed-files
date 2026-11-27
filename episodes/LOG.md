@@ -7,6 +7,7 @@
 | 003 | How One Man Sold a Country That Didn't Exist (Poyais) | 8:25 | 2026-11-18 | scheduled: long Fri 20 Nov 17:00 (youtu.be/M3joMOp7rTQ); parts 1-3 (91 / 88 / 93 s) Sat 21 Nov 12:00 (youtu.be/eR-FmvaeaIo), Sat 21 Nov 19:00 (youtu.be/oPkL-w8lshg), Sun 22 Nov 12:00 (youtu.be/6c_Gb4O6PhI) SAST, YT + IG; TikTok by hand. Title changed after vidIQ score 85 -> 97 |
 | 004 | The $100 Million Diamond Heist Undone by Half a Sandwich (Antwerp 2003) | 8:24 | 2026-11-20 | drafts (awaiting yes): long Sat 21 Nov 17:00; parts 1-3 (79 / 93 / 94 s) Sun 22 Nov 19:00, Mon 23 Nov 12:00, Mon 23 Nov 19:00 SAST, YT + IG; TikTok by hand. Titles scored 87-88 |
 | 005 | How One Man Stole the Mona Lisa With a Plumber's Help (Peruggia, 1911) | 8:19 | 2026-11-25 | drafts (awaiting owner's yes via JARVIS): long Thu 26 Nov 17:00 SAST (YT); one standalone Short (87 s) Fri 27 Nov 17:00 SAST (YT + IG). No title scoring (free plan) |
+| 006 | How Charles Ponzi Turned a 5-Cent Coupon Into $15 Million (Boston 1919-1920) | 8:26 | 2026-11-27 | drafts (awaiting owner's yes via JARVIS): long Sat 28 Nov 17:00 SAST (YT); one standalone Short (89 s) Sun 29 Nov 17:00 SAST (YT + IG). No title scoring (free plan) |
 
 Channel: YouTube @CaseClosedFilesTV (UCwu-WpflQQiUYFDwYOQxMug). Instagram: caseclosed.files.
 
