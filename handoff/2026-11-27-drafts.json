@@ -1,0 +1,25 @@
+{
+ "youtube": [
+  {
+   "postId": "2c2d4ed4-24cb-44f0-b0bb-c9bbd1e7b945",
+   "title": "How Charles Ponzi Turned a 5-Cent Coupon Into $15 Million",
+   "format": "long",
+   "publishAt": "2026-11-28T17:00:00+02:00",
+   "platforms": [
+    "YOUTUBE"
+   ],
+   "video_url": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/006-ponzi/long.mp4"
+  },
+  {
+   "postId": "d6323232-d8f3-459e-b708-cc4b332b340c",
+   "title": "50% in 45 Days From a 5-Cent Coupon: The First Ponzi Scheme #shorts",
+   "format": "short",
+   "publishAt": "2026-11-29T17:00:00+02:00",
+   "platforms": [
+    "YOUTUBE",
+    "INSTAGRAM"
+   ],
+   "video_url": "https://raw.githubusercontent.com/henkobrandt-netizen/case-closed-files/main/media/006-ponzi/short_a.mp4"
+  }
+ ]
+}
